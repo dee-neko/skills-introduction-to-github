@@ -891,12 +891,16 @@
 
         // 配置番号を取得（早い時間順）
         function getPlacementNumber(panelId) {
-            const panel = placedPanels.find(p => p.id === panelId);
-            if (!panel) return { index: 0, total: 0 };
+            // panelIdは文字列の可能性があるので、緩い等価で検索
+            const panel = placedPanels.find(p => p.id == panelId);
+            if (!panel) {
+                console.warn('Panel not found:', panelId, 'Available panels:', placedPanels.map(p => p.id));
+                return { index: 0, total: 0 };
+            }
 
             // 同じテンプレートのパネルを取得して時間順にソート
             const samePanels = placedPanels
-                .filter(p => p.templateId === panel.templateId)
+                .filter(p => p.templateId == panel.templateId)
                 .sort((a, b) => {
                     // 週 → 曜日 → コマの順でソート
                     if (a.week !== b.week) return a.week - b.week;
@@ -904,8 +908,8 @@
                     return a.slot - b.slot;
                 });
 
-            const index = samePanels.findIndex(p => p.id === panelId);
-            const template = lectureTemplates.find(t => t.id === panel.templateId);
+            const index = samePanels.findIndex(p => p.id == panelId);
+            const template = lectureTemplates.find(t => t.id == panel.templateId);
             const total = template ? template.requiredSlots : samePanels.length;
 
             return { index: index + 1, total: total };
