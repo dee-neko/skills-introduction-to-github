@@ -793,6 +793,7 @@
 
                 div.addEventListener('dragend', function() {
                     this.style.opacity = '1';
+                    draggedTemplateId = null;
                 });
 
                 container.appendChild(div);
@@ -915,6 +916,7 @@
             // パネルのドラッグイベント
             panel.addEventListener('dragstart', function(e) {
                 draggedElement = this;
+                draggedTemplateId = null; // パネル移動時はテンプレートIDをクリア
                 e.dataTransfer.effectAllowed = 'move';
                 this.style.opacity = '0.5';
             });
