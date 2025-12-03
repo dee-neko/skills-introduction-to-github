@@ -1,0 +1,17 @@
+{
+  "name": "typescript-block-breaker",
+  "version": "1.0.0",
+  "description": "A classic block breaker game built with TypeScript",
+  "main": "dist/game.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["game", "typescript", "block-breaker", "canvas"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

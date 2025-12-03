@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブロック崩し - TypeScript</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ブロック崩し</h1>
+        <div class="game-info">
+            <div class="score">スコア: <span id="score">0</span></div>
+            <div class="lives">残機: <span id="lives">3</span></div>
+        </div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="controls">
+            <p>← → キーでパドルを移動</p>
+            <p>スペースキーでゲームを開始/一時停止</p>
+            <button id="restartButton">リスタート</button>
+        </div>
+        <div id="gameOver" class="game-over hidden">
+            <h2>ゲームオーバー</h2>
+            <p>最終スコア: <span id="finalScore">0</span></p>
+            <button id="playAgainButton">もう一度プレイ</button>
+        </div>
+    </div>
+    <script type="module" src="dist/game.js"></script>
+</body>
+</html>
