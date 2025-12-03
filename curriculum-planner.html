@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カリキュラム検討/編成アプリ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 800px;
+        }
+
+        /* 左側パネル - 講義作成エリア */
+        .sidebar {
+            width: 350px;
+            background: #f8f9fa;
+            border-right: 2px solid #e0e0e0;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input[type="color"] {
+            height: 45px;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .lecture-templates {
+            margin-top: 25px;
+        }
+
+        .lecture-template {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .lecture-template:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .lecture-template:active {
+            cursor: grabbing;
+        }
+
+        .lecture-template-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .lecture-template-info {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .lecture-template-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        /* 右側 - カレンダーエリア */
+        .calendar-area {
+            flex: 1;
+            padding: 25px;
+            overflow-x: auto;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .btn {
+            width: auto;
+            margin: 0;
+        }
+
+        .weeks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .week-section {
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .week-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            gap: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .time-slot-label {
+            background: #6c757d;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .calendar-cell {
+            border: 2px dashed #ccc;
+            min-height: 80px;
+            border-radius: 5px;
+            padding: 5px;
+            background: #fafafa;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .calendar-cell.drag-over {
+            background: #e3f2fd;
+            border-color: #667eea;
+            border-style: solid;
+        }
+
+        .lecture-panel {
+            background: #4CAF50;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: move;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .lecture-panel:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .lecture-panel-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 13px;
+        }
+
+        .lecture-panel-instructor {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .lecture-panel-duration {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .lecture-panel-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .lecture-panel-remove:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .sidebar,
+            .toolbar,
+            .lecture-panel-remove,
+            .lecture-template-actions {
+                display: none !important;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .calendar-area {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 カリキュラム検討/編成アプリ</h1>
+            <p>2週間研修プログラム - 講義パネルをドラッグ＆ドロップで配置できます</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 左側パネル -->
+            <div class="sidebar">
+                <h2>📝 講義パネルを作成</h2>
+                <form id="lecture-form">
+                    <div class="form-group">
+                        <label for="lecture-name">講義名</label>
+                        <input type="text" id="lecture-name" placeholder="例: プログラミング基礎" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="instructor-name">講師名</label>
+                        <input type="text" id="instructor-name" placeholder="例: 山田太郎" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">講義の長さ（コマ数）</label>
+                        <select id="duration" required>
+                            <option value="1">1コマ</option>
+                            <option value="2">2コマ</option>
+                            <option value="3">3コマ</option>
+                            <option value="4">4コマ</option>
+                            <option value="5">5コマ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="panel-color">パネルの色</label>
+                        <input type="color" id="panel-color" value="#4CAF50">
+                    </div>
+                    <button type="submit" class="btn btn-primary">講義パネルを追加</button>
+                </form>
+
+                <div class="lecture-templates">
+                    <h2>📋 作成済み講義パネル</h2>
+                    <div id="templates-list"></div>
+                </div>
+            </div>
+
+            <!-- 右側カレンダー -->
+            <div class="calendar-area">
+                <div class="toolbar">
+                    <button class="btn btn-success" onclick="saveToFile()">💾 保存</button>
+                    <div class="file-input-wrapper">
+                        <button class="btn btn-secondary">📂 読み込み</button>
+                        <input type="file" id="load-file" accept=".json" onchange="loadFromFile(event)">
+                    </div>
+                    <button class="btn btn-primary" onclick="exportToPDF()">📄 PDF出力</button>
+                    <button class="btn btn-danger" onclick="clearCalendar()">🗑️ カレンダーをクリア</button>
+                </div>
+
+                <div class="weeks-container" id="calendar-container">
+                    <!-- 第1週 -->
+                    <div class="week-section">
+                        <div class="week-title">第1週</div>
+                        <div class="calendar-grid">
+                            <div class="day-header" style="grid-column: 1;"></div>
+                            <div class="day-header">月曜日</div>
+                            <div class="day-header">火曜日</div>
+                            <div class="day-header">水曜日</div>
+                            <div class="day-header">木曜日</div>
+                            <div class="day-header">金曜日</div>
+
+                            <!-- 1コマ目 -->
+                            <div class="time-slot-label">1コマ目</div>
+                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="1"></div>
+
+                            <!-- 2コマ目 -->
+                            <div class="time-slot-label">2コマ目</div>
+                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="2"></div>
+
+                            <!-- 3コマ目 -->
+                            <div class="time-slot-label">3コマ目</div>
+                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="3"></div>
+
+                            <!-- 4コマ目 -->
+                            <div class="time-slot-label">4コマ目</div>
+                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="4"></div>
+
+                            <!-- 5コマ目 -->
+                            <div class="time-slot-label">5コマ目</div>
+                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="5"></div>
+                        </div>
+                    </div>
+
+                    <!-- 第2週 -->
+                    <div class="week-section">
+                        <div class="week-title">第2週</div>
+                        <div class="calendar-grid">
+                            <div class="day-header" style="grid-column: 1;"></div>
+                            <div class="day-header">月曜日</div>
+                            <div class="day-header">火曜日</div>
+                            <div class="day-header">水曜日</div>
+                            <div class="day-header">木曜日</div>
+                            <div class="day-header">金曜日</div>
+
+                            <!-- 1コマ目 -->
+                            <div class="time-slot-label">1コマ目</div>
+                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="1"></div>
+                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="1"></div>
+
+                            <!-- 2コマ目 -->
+                            <div class="time-slot-label">2コマ目</div>
+                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="2"></div>
+                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="2"></div>
+
+                            <!-- 3コマ目 -->
+                            <div class="time-slot-label">3コマ目</div>
+                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="3"></div>
+                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="3"></div>
+
+                            <!-- 4コマ目 -->
+                            <div class="time-slot-label">4コマ目</div>
+                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="4"></div>
+                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="4"></div>
+
+                            <!-- 5コマ目 -->
+                            <div class="time-slot-label">5コマ目</div>
+                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="5"></div>
+                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 編集モーダル -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">講義パネルを編集</div>
+            <form id="edit-form">
+                <div class="form-group">
+                    <label for="edit-lecture-name">講義名</label>
+                    <input type="text" id="edit-lecture-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-instructor-name">講師名</label>
+                    <input type="text" id="edit-instructor-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-duration">講義の長さ（コマ数）</label>
+                    <select id="edit-duration" required>
+                        <option value="1">1コマ</option>
+                        <option value="2">2コマ</option>
+                        <option value="3">3コマ</option>
+                        <option value="4">4コマ</option>
+                        <option value="5">5コマ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-panel-color">パネルの色</label>
+                    <input type="color" id="edit-panel-color">
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // データ構造
+        let lectureTemplates = [];
+        let currentEditingTemplateId = null;
+        let draggedElement = null;
+        let draggedTemplateId = null;
+
+        // フォーム送信イベント
+        document.getElementById('lecture-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const lecture = {
+                id: Date.now(),
+                name: document.getElementById('lecture-name').value,
+                instructor: document.getElementById('instructor-name').value,
+                duration: parseInt(document.getElementById('duration').value),
+                color: document.getElementById('panel-color').value
+            };
+
+            lectureTemplates.push(lecture);
+            renderTemplates();
+
+            // フォームをリセット
+            this.reset();
+            document.getElementById('panel-color').value = '#4CAF50';
+        });
+
+        // テンプレート一覧を表示
+        function renderTemplates() {
+            const container = document.getElementById('templates-list');
+            container.innerHTML = '';
+
+            if (lectureTemplates.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">まだ講義パネルがありません</p>';
+                return;
+            }
+
+            lectureTemplates.forEach(template => {
+                const div = document.createElement('div');
+                div.className = 'lecture-template';
+                div.draggable = true;
+                div.dataset.templateId = template.id;
+                div.style.borderLeft = `5px solid ${template.color}`;
+
+                div.innerHTML = `
+                    <div class="lecture-template-header">${template.name}</div>
+                    <div class="lecture-template-info">
+                        講師: ${template.instructor}<br>
+                        時間: ${template.duration}コマ
+                    </div>
+                    <div class="lecture-template-actions">
+                        <button class="btn btn-primary btn-small" onclick="editTemplate(${template.id})">編集</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteTemplate(${template.id})">削除</button>
+                    </div>
+                `;
+
+                // ドラッグイベント
+                div.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    draggedTemplateId = template.id;
+                    e.dataTransfer.effectAllowed = 'copy';
+                    this.style.opacity = '0.5';
+                });
+
+                div.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                });
+
+                container.appendChild(div);
+            });
+        }
+
+        // カレンダーセルのドロップイベント設定
+        document.querySelectorAll('.calendar-cell').forEach(cell => {
+            cell.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                this.classList.add('drag-over');
+            });
+
+            cell.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+
+            cell.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+
+                if (draggedTemplateId) {
+                    const template = lectureTemplates.find(t => t.id === draggedTemplateId);
+                    if (template) {
+                        // 最大2つまでのパネルを許可
+                        const existingPanels = this.querySelectorAll('.lecture-panel').length;
+                        if (existingPanels >= 2) {
+                            alert('このセルには最大2つまでの講義パネルを配置できます。');
+                            return;
+                        }
+
+                        addLecturePanel(this, template);
+                    }
+                } else if (draggedElement && draggedElement.classList.contains('lecture-panel')) {
+                    // パネルの移動
+                    const existingPanels = this.querySelectorAll('.lecture-panel').length;
+                    if (existingPanels >= 2) {
+                        alert('このセルには最大2つまでの講義パネルを配置できます。');
+                        return;
+                    }
+
+                    this.appendChild(draggedElement);
+                }
+
+                draggedTemplateId = null;
+            });
+        });
+
+        // カレンダーに講義パネルを追加
+        function addLecturePanel(cell, template) {
+            const panel = document.createElement('div');
+            panel.className = 'lecture-panel';
+            panel.draggable = true;
+            panel.style.backgroundColor = template.color;
+            panel.dataset.templateId = template.id;
+
+            panel.innerHTML = `
+                <button class="lecture-panel-remove" onclick="removeLecturePanel(this)">×</button>
+                <div class="lecture-panel-title">${template.name}</div>
+                <div class="lecture-panel-instructor">講師: ${template.instructor}</div>
+                <div class="lecture-panel-duration">${template.duration}コマ</div>
+            `;
+
+            // パネルのドラッグイベント
+            panel.addEventListener('dragstart', function(e) {
+                draggedElement = this;
+                e.dataTransfer.effectAllowed = 'move';
+                this.style.opacity = '0.5';
+            });
+
+            panel.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+                draggedElement = null;
+            });
+
+            cell.appendChild(panel);
+        }
+
+        // 講義パネルを削除
+        function removeLecturePanel(button) {
+            if (confirm('この講義パネルをカレンダーから削除しますか？')) {
+                button.parentElement.remove();
+            }
+        }
+
+        // テンプレートを編集
+        function editTemplate(id) {
+            const template = lectureTemplates.find(t => t.id === id);
+            if (!template) return;
+
+            currentEditingTemplateId = id;
+            document.getElementById('edit-lecture-name').value = template.name;
+            document.getElementById('edit-instructor-name').value = template.instructor;
+            document.getElementById('edit-duration').value = template.duration;
+            document.getElementById('edit-panel-color').value = template.color;
+
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        // 編集モーダルを閉じる
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+            currentEditingTemplateId = null;
+        }
+
+        // 編集フォーム送信
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const template = lectureTemplates.find(t => t.id === currentEditingTemplateId);
+            if (template) {
+                const oldColor = template.color;
+                template.name = document.getElementById('edit-lecture-name').value;
+                template.instructor = document.getElementById('edit-instructor-name').value;
+                template.duration = parseInt(document.getElementById('edit-duration').value);
+                template.color = document.getElementById('edit-panel-color').value;
+
+                // カレンダー上の該当パネルも更新
+                document.querySelectorAll(`.lecture-panel[data-template-id="${currentEditingTemplateId}"]`).forEach(panel => {
+                    panel.querySelector('.lecture-panel-title').textContent = template.name;
+                    panel.querySelector('.lecture-panel-instructor').textContent = `講師: ${template.instructor}`;
+                    panel.querySelector('.lecture-panel-duration').textContent = `${template.duration}コマ`;
+                    panel.style.backgroundColor = template.color;
+                });
+
+                renderTemplates();
+            }
+
+            closeEditModal();
+        });
+
+        // テンプレートを削除
+        function deleteTemplate(id) {
+            if (confirm('この講義パネルのテンプレートを削除しますか？\n（カレンダーに配置済みのパネルは削除されません）')) {
+                lectureTemplates = lectureTemplates.filter(t => t.id !== id);
+                renderTemplates();
+            }
+        }
+
+        // カレンダーをクリア
+        function clearCalendar() {
+            if (confirm('カレンダー上のすべての講義パネルを削除しますか？')) {
+                document.querySelectorAll('.lecture-panel').forEach(panel => panel.remove());
+            }
+        }
+
+        // ファイルに保存
+        function saveToFile() {
+            const data = {
+                templates: lectureTemplates,
+                calendar: []
+            };
+
+            // カレンダー上の配置を保存
+            document.querySelectorAll('.calendar-cell').forEach(cell => {
+                const week = cell.dataset.week;
+                const day = cell.dataset.day;
+                const slot = cell.dataset.slot;
+
+                const panels = cell.querySelectorAll('.lecture-panel');
+                panels.forEach(panel => {
+                    data.calendar.push({
+                        week: parseInt(week),
+                        day: parseInt(day),
+                        slot: parseInt(slot),
+                        templateId: parseInt(panel.dataset.templateId)
+                    });
+                });
+            });
+
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `curriculum_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ファイルから読み込み
+        function loadFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // テンプレートを復元
+                    lectureTemplates = data.templates || [];
+                    renderTemplates();
+
+                    // カレンダーをクリア
+                    document.querySelectorAll('.lecture-panel').forEach(panel => panel.remove());
+
+                    // カレンダー配置を復元
+                    if (data.calendar) {
+                        data.calendar.forEach(item => {
+                            const cell = document.querySelector(
+                                `.calendar-cell[data-week="${item.week}"][data-day="${item.day}"][data-slot="${item.slot}"]`
+                            );
+                            const template = lectureTemplates.find(t => t.id === item.templateId);
+
+                            if (cell && template) {
+                                addLecturePanel(cell, template);
+                            }
+                        });
+                    }
+
+                    alert('ファイルを読み込みました！');
+                } catch (error) {
+                    alert('ファイルの読み込みに失敗しました。');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+
+            // ファイル選択をリセット
+            event.target.value = '';
+        }
+
+        // PDF出力
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+
+            try {
+                // カレンダーエリアをキャプチャ
+                const calendarArea = document.querySelector('.weeks-container');
+                const canvas = await html2canvas(calendarArea, {
+                    scale: 2,
+                    backgroundColor: '#ffffff'
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const imgWidth = 297; // A4横の幅
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= 210; // A4の高さ
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= 210;
+                }
+
+                pdf.save(`curriculum_${new Date().toISOString().slice(0,10)}.pdf`);
+            } catch (error) {
+                alert('PDF出力に失敗しました。');
+                console.error(error);
+            }
+        }
+
+        // 初期化
+        renderTemplates();
+    </script>
+</body>
+</html>
