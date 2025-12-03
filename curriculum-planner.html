@@ -882,7 +882,33 @@
 
             // 表示を更新
             renderPanel(panelId);
+
+            // 同じテンプレートの他のパネルの番号を更新
+            updatePanelNumbers(template.id);
+
             renderTemplates(); // 進捗を更新
+        }
+
+        // 配置番号を取得（早い時間順）
+        function getPlacementNumber(panelId) {
+            const panel = placedPanels.find(p => p.id === panelId);
+            if (!panel) return { index: 0, total: 0 };
+
+            // 同じテンプレートのパネルを取得して時間順にソート
+            const samePanels = placedPanels
+                .filter(p => p.templateId === panel.templateId)
+                .sort((a, b) => {
+                    // 週 → 曜日 → コマの順でソート
+                    if (a.week !== b.week) return a.week - b.week;
+                    if (a.day !== b.day) return a.day - b.day;
+                    return a.slot - b.slot;
+                });
+
+            const index = samePanels.findIndex(p => p.id === panelId);
+            const template = lectureTemplates.find(t => t.id === panel.templateId);
+            const total = template ? template.requiredSlots : samePanels.length;
+
+            return { index: index + 1, total: total };
         }
 
         // パネルを描画
@@ -900,18 +926,39 @@
 
             if (!cell) return;
 
+            // 配置番号を取得
+            const { index, total } = getPlacementNumber(panelId);
+
             const panel = document.createElement('div');
             panel.className = 'lecture-panel';
-            panel.draggable = true;
             panel.style.backgroundColor = template.color;
             panel.dataset.panelId = panelId;
             panel.dataset.templateId = template.id;
 
-            panel.innerHTML = `
-                <button class="lecture-panel-remove" onclick="removePanelById('${panelId}', true)">×</button>
-                <div class="lecture-panel-title">${template.name}</div>
-                <div class="lecture-panel-instructor">講師: ${template.instructor}</div>
-            `;
+            // 削除ボタンと内容を作成
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'lecture-panel-remove';
+            removeBtn.textContent = '×';
+            removeBtn.draggable = false; // 削除ボタンはドラッグ不可
+            removeBtn.onclick = function(e) {
+                e.stopPropagation();
+                removePanelById(panelId, true);
+            };
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'lecture-panel-title';
+            titleDiv.textContent = `${template.name} ${index}/${total}`;
+
+            const instructorDiv = document.createElement('div');
+            instructorDiv.className = 'lecture-panel-instructor';
+            instructorDiv.textContent = `講師: ${template.instructor}`;
+
+            panel.appendChild(removeBtn);
+            panel.appendChild(titleDiv);
+            panel.appendChild(instructorDiv);
+
+            // パネルをドラッグ可能にする（innerHTML後に設定）
+            panel.draggable = true;
 
             // パネルのドラッグイベント
             panel.addEventListener('dragstart', function(e) {
@@ -931,6 +978,11 @@
 
         // パネルをIDで削除
         function removePanelById(panelId, updateTemplates) {
+            const panel = placedPanels.find(p => p.id == panelId);
+            if (!panel) return;
+
+            const templateId = panel.templateId;
+
             // データから削除
             placedPanels = placedPanels.filter(p => p.id != panelId);
 
@@ -940,10 +992,29 @@
                 panelElement.remove();
             }
 
+            // 同じテンプレートの他のパネルの番号を更新
+            updatePanelNumbers(templateId);
+
             // テンプレート一覧を更新（進捗表示）
             if (updateTemplates) {
                 renderTemplates();
             }
+        }
+
+        // 特定テンプレートのパネル番号を更新
+        function updatePanelNumbers(templateId) {
+            const panels = document.querySelectorAll(`.lecture-panel[data-template-id="${templateId}"]`);
+            panels.forEach(panelElement => {
+                const panelId = panelElement.dataset.panelId;
+                const { index, total } = getPlacementNumber(panelId);
+                const titleDiv = panelElement.querySelector('.lecture-panel-title');
+                if (titleDiv) {
+                    const template = lectureTemplates.find(t => t.id == templateId);
+                    if (template) {
+                        titleDiv.textContent = `${template.name} ${index}/${total}`;
+                    }
+                }
+            });
         }
 
         // 配置済みパネルを復元
