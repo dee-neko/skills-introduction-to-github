@@ -149,6 +149,15 @@
             background: #c82333;
         }
 
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+        }
+
         .lecture-templates {
             margin-top: 25px;
         }
@@ -228,46 +237,67 @@
             border-radius: 10px;
             padding: 20px;
             background: #f8f9fa;
+            position: relative;
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         .week-title {
             font-size: 20px;
             font-weight: bold;
             color: #667eea;
-            margin-bottom: 15px;
-            text-align: center;
+        }
+
+        .week-remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .week-remove-btn:hover {
+            background: #c82333;
         }
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: 80px repeat(5, 1fr);
-            gap: 10px;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 8px;
             background: white;
             padding: 15px;
             border-radius: 8px;
         }
 
-        .day-header {
+        .slot-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             font-weight: bold;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        .time-slot-label {
+        .day-label {
             background: #6c757d;
             color: white;
-            padding: 15px 10px;
+            padding: 12px 10px;
             text-align: center;
             font-weight: bold;
             border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .calendar-cell {
@@ -278,6 +308,9 @@
             background: #fafafa;
             transition: all 0.3s;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         .calendar-cell.drag-over {
@@ -286,17 +319,22 @@
             border-style: solid;
         }
 
+        .calendar-cell.occupied {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
         .lecture-panel {
             background: #4CAF50;
             color: white;
             padding: 8px;
             border-radius: 5px;
-            margin-bottom: 5px;
             cursor: move;
             font-size: 12px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transition: all 0.3s;
             position: relative;
+            height: fit-content;
         }
 
         .lecture-panel:hover {
@@ -404,7 +442,8 @@
             .sidebar,
             .toolbar,
             .lecture-panel-remove,
-            .lecture-template-actions {
+            .lecture-template-actions,
+            .week-remove-btn {
                 display: none !important;
             }
 
@@ -433,8 +472,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 カリキュラム検討/編成アプリ</h1>
-            <p>2週間研修プログラム - 講義パネルをドラッグ＆ドロップで配置できます</p>
+            <h1>📚 カリキュラム検討/編成アプリ v2</h1>
+            <p>研修プログラム - 講義パネルをドラッグ＆ドロップで配置（長さに応じて複数コマに展開）</p>
         </div>
 
         <div class="main-content">
@@ -482,115 +521,12 @@
                         <input type="file" id="load-file" accept=".json" onchange="loadFromFile(event)">
                     </div>
                     <button class="btn btn-primary" onclick="exportToPDF()">📄 PDF出力</button>
+                    <button class="btn btn-info" onclick="addWeek()">➕ 週を追加</button>
                     <button class="btn btn-danger" onclick="clearCalendar()">🗑️ カレンダーをクリア</button>
                 </div>
 
                 <div class="weeks-container" id="calendar-container">
-                    <!-- 第1週 -->
-                    <div class="week-section">
-                        <div class="week-title">第1週</div>
-                        <div class="calendar-grid">
-                            <div class="day-header" style="grid-column: 1;"></div>
-                            <div class="day-header">月曜日</div>
-                            <div class="day-header">火曜日</div>
-                            <div class="day-header">水曜日</div>
-                            <div class="day-header">木曜日</div>
-                            <div class="day-header">金曜日</div>
-
-                            <!-- 1コマ目 -->
-                            <div class="time-slot-label">1コマ目</div>
-                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="1"></div>
-
-                            <!-- 2コマ目 -->
-                            <div class="time-slot-label">2コマ目</div>
-                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="2"></div>
-
-                            <!-- 3コマ目 -->
-                            <div class="time-slot-label">3コマ目</div>
-                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="3"></div>
-
-                            <!-- 4コマ目 -->
-                            <div class="time-slot-label">4コマ目</div>
-                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="4"></div>
-
-                            <!-- 5コマ目 -->
-                            <div class="time-slot-label">5コマ目</div>
-                            <div class="calendar-cell" data-week="1" data-day="1" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="1" data-day="2" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="1" data-day="3" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="1" data-day="4" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="1" data-day="5" data-slot="5"></div>
-                        </div>
-                    </div>
-
-                    <!-- 第2週 -->
-                    <div class="week-section">
-                        <div class="week-title">第2週</div>
-                        <div class="calendar-grid">
-                            <div class="day-header" style="grid-column: 1;"></div>
-                            <div class="day-header">月曜日</div>
-                            <div class="day-header">火曜日</div>
-                            <div class="day-header">水曜日</div>
-                            <div class="day-header">木曜日</div>
-                            <div class="day-header">金曜日</div>
-
-                            <!-- 1コマ目 -->
-                            <div class="time-slot-label">1コマ目</div>
-                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="1"></div>
-                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="1"></div>
-
-                            <!-- 2コマ目 -->
-                            <div class="time-slot-label">2コマ目</div>
-                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="2"></div>
-                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="2"></div>
-
-                            <!-- 3コマ目 -->
-                            <div class="time-slot-label">3コマ目</div>
-                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="3"></div>
-                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="3"></div>
-
-                            <!-- 4コマ目 -->
-                            <div class="time-slot-label">4コマ目</div>
-                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="4"></div>
-                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="4"></div>
-
-                            <!-- 5コマ目 -->
-                            <div class="time-slot-label">5コマ目</div>
-                            <div class="calendar-cell" data-week="2" data-day="1" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="2" data-day="2" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="2" data-day="3" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="2" data-day="4" data-slot="5"></div>
-                            <div class="calendar-cell" data-week="2" data-day="5" data-slot="5"></div>
-                        </div>
-                    </div>
+                    <!-- 週はJavaScriptで動的に生成 -->
                 </div>
             </div>
         </div>
@@ -637,6 +573,128 @@
         let currentEditingTemplateId = null;
         let draggedElement = null;
         let draggedTemplateId = null;
+        let weekCount = 2; // 初期週数
+        let placedPanels = []; // 配置済みパネルの情報
+
+        const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
+        const SLOTS = 5;
+
+        // 初期化
+        function init() {
+            renderWeeks();
+            renderTemplates();
+        }
+
+        // 週を描画
+        function renderWeeks() {
+            const container = document.getElementById('calendar-container');
+            container.innerHTML = '';
+
+            for (let week = 1; week <= weekCount; week++) {
+                const weekSection = createWeekSection(week);
+                container.appendChild(weekSection);
+            }
+
+            // ドロップイベントを再設定
+            setupDropEvents();
+        }
+
+        // 週セクションを作成
+        function createWeekSection(weekNum) {
+            const section = document.createElement('div');
+            section.className = 'week-section';
+            section.dataset.week = weekNum;
+
+            const header = document.createElement('div');
+            header.className = 'week-header';
+
+            const title = document.createElement('div');
+            title.className = 'week-title';
+            title.textContent = `第${weekNum}週`;
+
+            header.appendChild(title);
+
+            // 週を削除するボタン（2週以上ある場合のみ表示）
+            if (weekCount > 1) {
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'week-remove-btn';
+                removeBtn.textContent = '週を削除';
+                removeBtn.onclick = () => removeWeek(weekNum);
+                header.appendChild(removeBtn);
+            }
+
+            section.appendChild(header);
+
+            // カレンダーグリッドを作成
+            const grid = document.createElement('div');
+            grid.className = 'calendar-grid';
+
+            // ヘッダー行
+            const emptyHeader = document.createElement('div');
+            emptyHeader.className = 'slot-header';
+            grid.appendChild(emptyHeader);
+
+            for (let slot = 1; slot <= SLOTS; slot++) {
+                const slotHeader = document.createElement('div');
+                slotHeader.className = 'slot-header';
+                slotHeader.textContent = `${slot}コマ目`;
+                grid.appendChild(slotHeader);
+            }
+
+            // 各曜日の行
+            for (let dayIdx = 0; dayIdx < DAYS.length; dayIdx++) {
+                const dayLabel = document.createElement('div');
+                dayLabel.className = 'day-label';
+                dayLabel.textContent = DAYS[dayIdx];
+                grid.appendChild(dayLabel);
+
+                for (let slot = 1; slot <= SLOTS; slot++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'calendar-cell';
+                    cell.dataset.week = weekNum;
+                    cell.dataset.day = dayIdx + 1;
+                    cell.dataset.slot = slot;
+                    grid.appendChild(cell);
+                }
+            }
+
+            section.appendChild(grid);
+            return section;
+        }
+
+        // 週を追加
+        function addWeek() {
+            weekCount++;
+            renderWeeks();
+            restorePlacedPanels();
+        }
+
+        // 週を削除
+        function removeWeek(weekNum) {
+            if (weekCount <= 1) {
+                alert('最低1週は必要です。');
+                return;
+            }
+
+            if (!confirm(`第${weekNum}週を削除しますか？配置済みの講義も削除されます。`)) {
+                return;
+            }
+
+            // その週のパネルを削除
+            placedPanels = placedPanels.filter(p => p.week !== weekNum);
+
+            // それ以降の週の番号を調整
+            placedPanels = placedPanels.map(p => {
+                if (p.week > weekNum) {
+                    return { ...p, week: p.week - 1 };
+                }
+                return p;
+            });
+
+            weekCount--;
+            renderWeeks();
+            restorePlacedPanels();
+        }
 
         // フォーム送信イベント
         document.getElementById('lecture-form').addEventListener('submit', function(e) {
@@ -703,62 +761,132 @@
             });
         }
 
-        // カレンダーセルのドロップイベント設定
-        document.querySelectorAll('.calendar-cell').forEach(cell => {
-            cell.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
-                this.classList.add('drag-over');
-            });
+        // ドロップイベントを設定
+        function setupDropEvents() {
+            document.querySelectorAll('.calendar-cell').forEach(cell => {
+                cell.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = draggedTemplateId ? 'copy' : 'move';
+                    this.classList.add('drag-over');
+                });
 
-            cell.addEventListener('dragleave', function() {
-                this.classList.remove('drag-over');
-            });
+                cell.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
 
-            cell.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('drag-over');
+                cell.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
 
-                if (draggedTemplateId) {
-                    const template = lectureTemplates.find(t => t.id === draggedTemplateId);
-                    if (template) {
-                        // 最大2つまでのパネルを許可
-                        const existingPanels = this.querySelectorAll('.lecture-panel').length;
-                        if (existingPanels >= 2) {
-                            alert('このセルには最大2つまでの講義パネルを配置できます。');
-                            return;
+                    const week = parseInt(this.dataset.week);
+                    const day = parseInt(this.dataset.day);
+                    const slot = parseInt(this.dataset.slot);
+
+                    if (draggedTemplateId) {
+                        // テンプレートから新規配置
+                        const template = lectureTemplates.find(t => t.id === draggedTemplateId);
+                        if (template) {
+                            if (canPlacePanel(week, day, slot, template.duration, null)) {
+                                placeLecturePanel(week, day, slot, template);
+                            } else {
+                                alert('この位置には配置できません。\n・十分なコマ数がない\n・既に講義が配置されている\n可能性があります。');
+                            }
                         }
+                        draggedTemplateId = null;
+                    } else if (draggedElement && draggedElement.classList.contains('lecture-panel')) {
+                        // パネルの移動
+                        const panelId = draggedElement.dataset.panelId;
+                        const panel = placedPanels.find(p => p.id === panelId);
 
-                        addLecturePanel(this, template);
+                        if (panel) {
+                            const template = lectureTemplates.find(t => t.id === panel.templateId);
+                            if (template && canPlacePanel(week, day, slot, template.duration, panelId)) {
+                                // 元の位置から削除
+                                removePanelById(panelId);
+                                // 新しい位置に配置
+                                placeLecturePanel(week, day, slot, template);
+                            } else {
+                                alert('この位置には移動できません。');
+                            }
+                        }
                     }
-                } else if (draggedElement && draggedElement.classList.contains('lecture-panel')) {
-                    // パネルの移動
-                    const existingPanels = this.querySelectorAll('.lecture-panel').length;
-                    if (existingPanels >= 2) {
-                        alert('このセルには最大2つまでの講義パネルを配置できます。');
-                        return;
-                    }
 
-                    this.appendChild(draggedElement);
-                }
-
-                draggedTemplateId = null;
+                    draggedElement = null;
+                });
             });
-        });
+        }
 
-        // カレンダーに講義パネルを追加
-        function addLecturePanel(cell, template) {
+        // パネルを配置可能かチェック
+        function canPlacePanel(week, day, startSlot, duration, excludePanelId) {
+            // 範囲チェック
+            if (startSlot + duration - 1 > SLOTS) {
+                return false;
+            }
+
+            // 重複チェック（同じセルに最大2つまで）
+            for (let i = 0; i < duration; i++) {
+                const slot = startSlot + i;
+                const panelsInCell = placedPanels.filter(p =>
+                    p.week === week &&
+                    p.day === day &&
+                    p.startSlot <= slot &&
+                    slot < p.startSlot + p.duration &&
+                    p.id !== excludePanelId
+                );
+
+                if (panelsInCell.length >= 2) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // 講義パネルを配置
+        function placeLecturePanel(week, day, startSlot, template) {
+            const panelId = Date.now() + Math.random();
+
+            // データを保存
+            placedPanels.push({
+                id: panelId,
+                week: week,
+                day: day,
+                startSlot: startSlot,
+                duration: template.duration,
+                templateId: template.id
+            });
+
+            // 表示を更新
+            renderPanel(panelId);
+        }
+
+        // パネルを描画
+        function renderPanel(panelId) {
+            const panelData = placedPanels.find(p => p.id === panelId);
+            if (!panelData) return;
+
+            const template = lectureTemplates.find(t => t.id === panelData.templateId);
+            if (!template) return;
+
+            // 開始セルを取得
+            const startCell = document.querySelector(
+                `.calendar-cell[data-week="${panelData.week}"][data-day="${panelData.day}"][data-slot="${panelData.startSlot}"]`
+            );
+
+            if (!startCell) return;
+
             const panel = document.createElement('div');
             panel.className = 'lecture-panel';
             panel.draggable = true;
             panel.style.backgroundColor = template.color;
+            panel.dataset.panelId = panelId;
             panel.dataset.templateId = template.id;
 
             panel.innerHTML = `
-                <button class="lecture-panel-remove" onclick="removeLecturePanel(this)">×</button>
+                <button class="lecture-panel-remove" onclick="removePanelById('${panelId}')">×</button>
                 <div class="lecture-panel-title">${template.name}</div>
                 <div class="lecture-panel-instructor">講師: ${template.instructor}</div>
-                <div class="lecture-panel-duration">${template.duration}コマ</div>
+                <div class="lecture-panel-duration">${template.duration}コマ (${panelData.startSlot}～${panelData.startSlot + template.duration - 1}コマ目)</div>
             `;
 
             // パネルのドラッグイベント
@@ -773,14 +901,68 @@
                 draggedElement = null;
             });
 
-            cell.appendChild(panel);
+            startCell.appendChild(panel);
+
+            // 占有セルをマーク
+            for (let i = 0; i < panelData.duration; i++) {
+                const slot = panelData.startSlot + i;
+                const cell = document.querySelector(
+                    `.calendar-cell[data-week="${panelData.week}"][data-day="${panelData.day}"][data-slot="${slot}"]`
+                );
+                if (cell) {
+                    cell.classList.add('occupied');
+                }
+            }
         }
 
-        // 講義パネルを削除
-        function removeLecturePanel(button) {
-            if (confirm('この講義パネルをカレンダーから削除しますか？')) {
-                button.parentElement.remove();
+        // パネルをIDで削除
+        function removePanelById(panelId) {
+            const panel = placedPanels.find(p => p.id == panelId);
+            if (!panel) return;
+
+            // データから削除
+            placedPanels = placedPanels.filter(p => p.id != panelId);
+
+            // DOMから削除と占有解除
+            const panelElement = document.querySelector(`.lecture-panel[data-panel-id="${panelId}"]`);
+            if (panelElement) {
+                panelElement.remove();
             }
+
+            // 占有セルのマークを更新
+            updateOccupiedCells();
+        }
+
+        // 占有セルを更新
+        function updateOccupiedCells() {
+            // すべてのoccupiedクラスを削除
+            document.querySelectorAll('.calendar-cell.occupied').forEach(cell => {
+                cell.classList.remove('occupied');
+            });
+
+            // 再度マーク
+            placedPanels.forEach(panelData => {
+                for (let i = 0; i < panelData.duration; i++) {
+                    const slot = panelData.startSlot + i;
+                    const cell = document.querySelector(
+                        `.calendar-cell[data-week="${panelData.week}"][data-day="${panelData.day}"][data-slot="${slot}"]`
+                    );
+                    if (cell) {
+                        cell.classList.add('occupied');
+                    }
+                }
+            });
+        }
+
+        // 配置済みパネルを復元
+        function restorePlacedPanels() {
+            // すべてのパネルを再描画
+            document.querySelectorAll('.lecture-panel').forEach(p => p.remove());
+
+            const panelsToRender = [...placedPanels];
+            panelsToRender.forEach(panelData => {
+                renderPanel(panelData.id);
+            });
         }
 
         // テンプレートを編集
@@ -809,21 +991,13 @@
 
             const template = lectureTemplates.find(t => t.id === currentEditingTemplateId);
             if (template) {
-                const oldColor = template.color;
                 template.name = document.getElementById('edit-lecture-name').value;
                 template.instructor = document.getElementById('edit-instructor-name').value;
                 template.duration = parseInt(document.getElementById('edit-duration').value);
                 template.color = document.getElementById('edit-panel-color').value;
 
-                // カレンダー上の該当パネルも更新
-                document.querySelectorAll(`.lecture-panel[data-template-id="${currentEditingTemplateId}"]`).forEach(panel => {
-                    panel.querySelector('.lecture-panel-title').textContent = template.name;
-                    panel.querySelector('.lecture-panel-instructor').textContent = `講師: ${template.instructor}`;
-                    panel.querySelector('.lecture-panel-duration').textContent = `${template.duration}コマ`;
-                    panel.style.backgroundColor = template.color;
-                });
-
                 renderTemplates();
+                restorePlacedPanels();
             }
 
             closeEditModal();
@@ -840,7 +1014,9 @@
         // カレンダーをクリア
         function clearCalendar() {
             if (confirm('カレンダー上のすべての講義パネルを削除しますか？')) {
+                placedPanels = [];
                 document.querySelectorAll('.lecture-panel').forEach(panel => panel.remove());
+                updateOccupiedCells();
             }
         }
 
@@ -848,25 +1024,9 @@
         function saveToFile() {
             const data = {
                 templates: lectureTemplates,
-                calendar: []
+                placedPanels: placedPanels,
+                weekCount: weekCount
             };
-
-            // カレンダー上の配置を保存
-            document.querySelectorAll('.calendar-cell').forEach(cell => {
-                const week = cell.dataset.week;
-                const day = cell.dataset.day;
-                const slot = cell.dataset.slot;
-
-                const panels = cell.querySelectorAll('.lecture-panel');
-                panels.forEach(panel => {
-                    data.calendar.push({
-                        week: parseInt(week),
-                        day: parseInt(day),
-                        slot: parseInt(slot),
-                        templateId: parseInt(panel.dataset.templateId)
-                    });
-                });
-            });
 
             const json = JSON.stringify(data, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
@@ -888,26 +1048,14 @@
                 try {
                     const data = JSON.parse(e.target.result);
 
-                    // テンプレートを復元
+                    // データを復元
                     lectureTemplates = data.templates || [];
+                    placedPanels = data.placedPanels || [];
+                    weekCount = data.weekCount || 2;
+
                     renderTemplates();
-
-                    // カレンダーをクリア
-                    document.querySelectorAll('.lecture-panel').forEach(panel => panel.remove());
-
-                    // カレンダー配置を復元
-                    if (data.calendar) {
-                        data.calendar.forEach(item => {
-                            const cell = document.querySelector(
-                                `.calendar-cell[data-week="${item.week}"][data-day="${item.day}"][data-slot="${item.slot}"]`
-                            );
-                            const template = lectureTemplates.find(t => t.id === item.templateId);
-
-                            if (cell && template) {
-                                addLecturePanel(cell, template);
-                            }
-                        });
-                    }
+                    renderWeeks();
+                    restorePlacedPanels();
 
                     alert('ファイルを読み込みました！');
                 } catch (error) {
@@ -926,7 +1074,6 @@
             const { jsPDF } = window.jspdf;
 
             try {
-                // カレンダーエリアをキャプチャ
                 const calendarArea = document.querySelector('.weeks-container');
                 const canvas = await html2canvas(calendarArea, {
                     scale: 2,
@@ -940,14 +1087,14 @@
                     format: 'a4'
                 });
 
-                const imgWidth = 297; // A4横の幅
+                const imgWidth = 297;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
                 let heightLeft = imgHeight;
                 let position = 0;
 
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= 210; // A4の高さ
+                heightLeft -= 210;
 
                 while (heightLeft > 0) {
                     position = heightLeft - imgHeight;
@@ -963,8 +1110,8 @@
             }
         }
 
-        // 初期化
-        renderTemplates();
+        // 初期化実行
+        init();
     </script>
 </body>
 </html>
