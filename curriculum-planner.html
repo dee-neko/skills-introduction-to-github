@@ -617,13 +617,69 @@
         let weekCount = 2; // 初期週数
         let placedPanels = []; // 配置済みパネルの情報
 
+        // 自動スクロール関連
+        let autoScrollInterval = null;
+        let currentMouseY = 0;
+        let isDragging = false;
+
         const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
         const SLOTS = 5;
+        const AUTO_SCROLL_ZONE = 50; // スクロールを開始するエリアの高さ（px）
+        const MAX_SCROLL_SPEED = 10; // 最大スクロール速度（px/frame）
+
+        // 自動スクロール機能
+        function startAutoScroll() {
+            if (autoScrollInterval) return; // 既に動作中なら何もしない
+
+            autoScrollInterval = setInterval(() => {
+                if (!isDragging) {
+                    stopAutoScroll();
+                    return;
+                }
+
+                const sidebar = document.querySelector('.sidebar');
+                if (!sidebar) return;
+
+                const sidebarRect = sidebar.getBoundingClientRect();
+                const relativeY = currentMouseY - sidebarRect.top;
+
+                // サイドバーの上端付近でスクロールアップ
+                if (relativeY >= 0 && relativeY < AUTO_SCROLL_ZONE) {
+                    const distance = AUTO_SCROLL_ZONE - relativeY;
+                    const speed = (distance / AUTO_SCROLL_ZONE) * MAX_SCROLL_SPEED;
+                    sidebar.scrollTop = Math.max(0, sidebar.scrollTop - speed);
+                }
+                // サイドバーの下端付近でスクロールダウン
+                else if (relativeY > sidebarRect.height - AUTO_SCROLL_ZONE && relativeY <= sidebarRect.height) {
+                    const distance = relativeY - (sidebarRect.height - AUTO_SCROLL_ZONE);
+                    const speed = (distance / AUTO_SCROLL_ZONE) * MAX_SCROLL_SPEED;
+                    sidebar.scrollTop = Math.min(
+                        sidebar.scrollHeight - sidebar.clientHeight,
+                        sidebar.scrollTop + speed
+                    );
+                }
+            }, 16); // 約60fps
+        }
+
+        function stopAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+        }
+
+        function handleDragMove(e) {
+            if (!isDragging) return;
+            currentMouseY = e.clientY;
+        }
 
         // 初期化
         function init() {
             renderWeeks();
             renderTemplates();
+
+            // ドラッグ中のマウス位置を追跡
+            document.addEventListener('dragover', handleDragMove);
         }
 
         // 週を描画
@@ -812,11 +868,19 @@
                     draggedTemplateId = template.id;
                     e.dataTransfer.effectAllowed = 'copy';
                     this.style.opacity = '0.5';
+
+                    // 自動スクロール開始
+                    isDragging = true;
+                    startAutoScroll();
                 });
 
                 div.addEventListener('dragend', function() {
                     this.style.opacity = '1';
                     draggedTemplateId = null;
+
+                    // 自動スクロール停止
+                    isDragging = false;
+                    stopAutoScroll();
                 });
 
                 container.appendChild(div);
@@ -1004,11 +1068,19 @@
                 draggedTemplateId = null; // パネル移動時はテンプレートIDをクリア
                 e.dataTransfer.effectAllowed = 'move';
                 this.style.opacity = '0.5';
+
+                // 自動スクロール開始
+                isDragging = true;
+                startAutoScroll();
             });
 
             panel.addEventListener('dragend', function() {
                 this.style.opacity = '1';
                 draggedElement = null;
+
+                // 自動スクロール停止
+                isDragging = false;
+                stopAutoScroll();
             });
 
             cell.appendChild(panel);
