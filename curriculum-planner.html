@@ -362,7 +362,7 @@
         .lecture-panel {
             background: #4CAF50;
             color: white;
-            padding: 8px;
+            padding: 8px 8px 28px 8px;
             border-radius: 5px;
             cursor: move;
             font-size: 12px;
@@ -390,8 +390,8 @@
 
         .lecture-panel-remove {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            bottom: 8px;
+            right: 8px;
             background: rgba(255, 255, 255, 0.3);
             border: none;
             border-radius: 50%;
@@ -415,14 +415,20 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 12px;
+            padding: 12px 12px 28px 12px;
         }
 
-        /* 1つのパネルの場合も削除ボタンは右上固定 */
+        /* 1つのパネルの場合も削除・コピーボタンは右下固定 */
         .calendar-cell.single-panel .lecture-panel-remove {
             position: absolute;
-            top: 8px;
+            bottom: 8px;
             right: 8px;
+        }
+
+        .calendar-cell.single-panel .lecture-panel-copy {
+            position: absolute;
+            bottom: 8px;
+            right: 33px;
         }
 
         .modal {
@@ -553,8 +559,8 @@
 
         .lecture-panel-copy {
             position: absolute;
-            top: 5px;
-            right: 30px;
+            bottom: 8px;
+            right: 33px;
             background: rgba(255, 255, 255, 0.3);
             border: none;
             border-radius: 50%;
