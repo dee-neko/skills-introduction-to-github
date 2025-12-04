@@ -823,7 +823,7 @@
 
                     if (draggedTemplateId) {
                         // テンプレートから新規配置
-                        const template = lectureTemplates.find(t => t.id === draggedTemplateId);
+                        const template = lectureTemplates.find(t => t.id == draggedTemplateId);
                         if (template) {
                             if (canPlacePanel(week, day, slot, null)) {
                                 placeLecturePanel(week, day, slot, template);
@@ -835,18 +835,29 @@
                     } else if (draggedElement && draggedElement.classList.contains('lecture-panel')) {
                         // パネルの移動
                         const panelId = draggedElement.dataset.panelId;
-                        const panel = placedPanels.find(p => p.id === panelId);
+                        const panel = placedPanels.find(p => p.id == panelId);
+
+                        console.log('ドラッグされたパネル:', panelId, 'タイプ:', typeof panelId);
+                        console.log('検索結果:', panel);
 
                         if (panel) {
-                            if (canPlacePanel(week, day, slot, panelId)) {
+                            const template = lectureTemplates.find(t => t.id == panel.templateId);
+                            if (template && canPlacePanel(week, day, slot, panelId)) {
+                                console.log('パネル移動開始:', {from: {week: panel.week, day: panel.day, slot: panel.slot}, to: {week, day, slot}});
                                 // 元の位置から削除
                                 removePanelById(panelId, false);
                                 // 新しい位置に配置
-                                const template = lectureTemplates.find(t => t.id === panel.templateId);
                                 placeLecturePanel(week, day, slot, template);
+                                console.log('パネル移動完了');
                             } else {
-                                alert('このセルには既に2つの講義が配置されています。');
+                                if (!template) {
+                                    console.error('テンプレートが見つかりません:', panel.templateId);
+                                } else {
+                                    alert('このセルには既に2つの講義が配置されています。');
+                                }
                             }
+                        } else {
+                            console.error('パネルデータが見つかりません。panelId:', panelId, 'placedPanels:', placedPanels.map(p => ({id: p.id, type: typeof p.id})));
                         }
                     }
 
@@ -861,7 +872,7 @@
                 p.week === week &&
                 p.day === day &&
                 p.slot === slot &&
-                p.id !== excludePanelId
+                p.id != excludePanelId  // 緩い等価で型変換
             );
 
             return panelsInCell.length < 2;
@@ -917,10 +928,10 @@
 
         // パネルを描画
         function renderPanel(panelId) {
-            const panelData = placedPanels.find(p => p.id === panelId);
+            const panelData = placedPanels.find(p => p.id == panelId);
             if (!panelData) return;
 
-            const template = lectureTemplates.find(t => t.id === panelData.templateId);
+            const template = lectureTemplates.find(t => t.id == panelData.templateId);
             if (!template) return;
 
             // セルを取得
