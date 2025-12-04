@@ -409,6 +409,22 @@
             transform: scale(1.1);
         }
 
+        /* 1つのパネルのみの場合、セル全体の高さに広げる */
+        .calendar-cell.single-panel .lecture-panel {
+            height: calc(100% - 10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        /* 1つのパネルの場合も削除ボタンは右上固定 */
+        .calendar-cell.single-panel .lecture-panel-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -989,6 +1005,24 @@
             });
 
             cell.appendChild(panel);
+
+            // セルの高さを更新
+            updateCellHeight(panelData.week, panelData.day, panelData.slot);
+        }
+
+        // セルの高さを更新（1つのパネルの場合は高さを2倍に）
+        function updateCellHeight(week, day, slot) {
+            const cell = document.querySelector(
+                `.calendar-cell[data-week="${week}"][data-day="${day}"][data-slot="${slot}"]`
+            );
+            if (!cell) return;
+
+            const panelCount = cell.querySelectorAll('.lecture-panel').length;
+            if (panelCount === 1) {
+                cell.classList.add('single-panel');
+            } else {
+                cell.classList.remove('single-panel');
+            }
         }
 
         // パネルをIDで削除
@@ -997,6 +1031,9 @@
             if (!panel) return;
 
             const templateId = panel.templateId;
+            const week = panel.week;
+            const day = panel.day;
+            const slot = panel.slot;
 
             // データから削除
             placedPanels = placedPanels.filter(p => p.id != panelId);
@@ -1006,6 +1043,9 @@
             if (panelElement) {
                 panelElement.remove();
             }
+
+            // セルの高さを更新
+            updateCellHeight(week, day, slot);
 
             // 同じテンプレートの他のパネルの番号を更新
             updatePanelNumbers(templateId);
