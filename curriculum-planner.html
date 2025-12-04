@@ -501,6 +501,77 @@
             }
         }
 
+        /* コピーモード用スタイル */
+        .copy-mode-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .copy-mode-banner.active {
+            display: block;
+        }
+
+        .copy-mode-banner .cancel-btn {
+            margin-left: 20px;
+            padding: 5px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .copy-mode-banner .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .calendar-cell.pasteable {
+            border-color: #667eea;
+            border-style: solid;
+            border-width: 3px;
+            background: #f0f4ff;
+            cursor: pointer;
+        }
+
+        .calendar-cell.pasteable:hover {
+            background: #e3f2fd;
+            border-color: #764ba2;
+        }
+
+        .lecture-panel-copy {
+            position: absolute;
+            top: 5px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .lecture-panel-copy:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
         @media (max-width: 1200px) {
             .main-content {
                 flex-direction: column;
@@ -515,6 +586,12 @@
     </style>
 </head>
 <body>
+    <!-- コピーモードバナー -->
+    <div id="copy-mode-banner" class="copy-mode-banner">
+        <span id="copy-mode-message"></span>
+        <button class="cancel-btn" onclick="cancelCopyMode()">キャンセル</button>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>📚 カリキュラム検討/編成アプリ v3</h1>
@@ -622,6 +699,10 @@
         let currentMouseY = 0;
         let isDragging = false;
 
+        // コピー&ペースト関連
+        let copiedPanelData = null; // コピーされたパネルのデータ
+        let isCopyMode = false; // コピーモード中かどうか
+
         const DAYS = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日'];
         const SLOTS = 5;
         const AUTO_SCROLL_ZONE = 50; // スクロールを開始するエリアの高さ（px）
@@ -671,6 +752,101 @@
         function handleDragMove(e) {
             if (!isDragging) return;
             currentMouseY = e.clientY;
+        }
+
+        // コピー&ペースト機能
+        function copyPanel(panelId) {
+            const panel = placedPanels.find(p => p.id == panelId);
+            if (!panel) return;
+
+            const template = lectureTemplates.find(t => t.id == panel.templateId);
+            if (!template) return;
+
+            // コピーデータを保存
+            copiedPanelData = {
+                templateId: panel.templateId,
+                templateName: template.name,
+                templateInstructor: template.instructor,
+                templateColor: template.color
+            };
+
+            // コピーモードを有効化
+            isCopyMode = true;
+
+            // バナーを表示
+            const banner = document.getElementById('copy-mode-banner');
+            const message = document.getElementById('copy-mode-message');
+            message.textContent = `「${template.name}」をコピー中 - ペースト先のセルをクリックしてください`;
+            banner.classList.add('active');
+
+            // ペースト可能なセルをハイライト
+            updatePasteableHighlight();
+        }
+
+        function cancelCopyMode() {
+            copiedPanelData = null;
+            isCopyMode = false;
+
+            // バナーを非表示
+            const banner = document.getElementById('copy-mode-banner');
+            banner.classList.remove('active');
+
+            // ハイライトを削除
+            document.querySelectorAll('.calendar-cell.pasteable').forEach(cell => {
+                cell.classList.remove('pasteable');
+            });
+        }
+
+        function updatePasteableHighlight() {
+            // すべてのセルからハイライトを削除
+            document.querySelectorAll('.calendar-cell.pasteable').forEach(cell => {
+                cell.classList.remove('pasteable');
+            });
+
+            if (!isCopyMode) return;
+
+            // ペースト可能なセル（パネルが2つ未満のセル）をハイライト
+            document.querySelectorAll('.calendar-cell').forEach(cell => {
+                const week = parseInt(cell.dataset.week);
+                const day = parseInt(cell.dataset.day);
+                const slot = parseInt(cell.dataset.slot);
+
+                const panelsInCell = placedPanels.filter(p =>
+                    p.week === week && p.day === day && p.slot === slot
+                );
+
+                if (panelsInCell.length < 2) {
+                    cell.classList.add('pasteable');
+                }
+            });
+        }
+
+        function pastePanel(week, day, slot) {
+            if (!isCopyMode || !copiedPanelData) return;
+
+            // ペースト可能かチェック
+            const panelsInCell = placedPanels.filter(p =>
+                p.week === week && p.day === day && p.slot === slot
+            );
+
+            if (panelsInCell.length >= 2) {
+                alert('このセルには既に2つの講義が配置されています。');
+                return;
+            }
+
+            // テンプレートを取得
+            const template = lectureTemplates.find(t => t.id == copiedPanelData.templateId);
+            if (!template) {
+                alert('コピー元の講義が見つかりません。');
+                cancelCopyMode();
+                return;
+            }
+
+            // パネルを配置
+            placeLecturePanel(week, day, slot, template);
+
+            // ハイライトを更新（新しいパネルが配置されたセルは除外）
+            updatePasteableHighlight();
         }
 
         // 初期化
@@ -890,6 +1066,16 @@
         // ドロップイベントを設定
         function setupDropEvents() {
             document.querySelectorAll('.calendar-cell').forEach(cell => {
+                // クリックイベント（ペースト用）
+                cell.addEventListener('click', function(e) {
+                    if (isCopyMode) {
+                        const week = parseInt(this.dataset.week);
+                        const day = parseInt(this.dataset.day);
+                        const slot = parseInt(this.dataset.slot);
+                        pastePanel(week, day, slot);
+                    }
+                });
+
                 cell.addEventListener('dragover', function(e) {
                     e.preventDefault();
                     e.dataTransfer.dropEffect = draggedTemplateId ? 'copy' : 'move';
@@ -1037,7 +1223,7 @@
             panel.dataset.panelId = panelId;
             panel.dataset.templateId = template.id;
 
-            // 削除ボタンと内容を作成
+            // 削除ボタンとコピーボタン、内容を作成
             const removeBtn = document.createElement('button');
             removeBtn.className = 'lecture-panel-remove';
             removeBtn.textContent = '×';
@@ -1045,6 +1231,15 @@
             removeBtn.onclick = function(e) {
                 e.stopPropagation();
                 removePanelById(panelId, true);
+            };
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'lecture-panel-copy';
+            copyBtn.textContent = '📋';
+            copyBtn.draggable = false; // コピーボタンはドラッグ不可
+            copyBtn.onclick = function(e) {
+                e.stopPropagation();
+                copyPanel(panelId);
             };
 
             const titleDiv = document.createElement('div');
@@ -1056,6 +1251,7 @@
             instructorDiv.textContent = `講師: ${template.instructor}`;
 
             panel.appendChild(removeBtn);
+            panel.appendChild(copyBtn);
             panel.appendChild(titleDiv);
             panel.appendChild(instructorDiv);
 
