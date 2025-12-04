@@ -548,7 +548,7 @@
 
                 <div style="margin-top: 15px;">
                     <div class="file-input-wrapper">
-                        <button class="btn btn-info">📂 CSVから一括読み込み</button>
+                        <button class="btn btn-info" onclick="document.getElementById('csv-file-input').click()">📂 CSVから一括読み込み</button>
                         <input type="file" id="csv-file-input" accept=".csv" onchange="importFromCSV(event)">
                     </div>
                 </div>
@@ -564,7 +564,7 @@
                 <div class="toolbar">
                     <button class="btn btn-success" onclick="saveToFile()">💾 保存</button>
                     <div class="file-input-wrapper">
-                        <button class="btn btn-secondary">📂 読み込み</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('load-file').click()">📂 読み込み</button>
                         <input type="file" id="load-file" accept=".json" onchange="loadFromFile(event)">
                     </div>
                     <button class="btn btn-primary" onclick="exportToPDF()">📄 PDF出力</button>
