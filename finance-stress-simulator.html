@@ -95,6 +95,65 @@
         .case-e0 { background-color: #f0f9ff; }
         .case-eb { background-color: #fef2f2; }
 
+        /* 為替レート設定 */
+        .exchange-rate-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            margin: 20px 0 30px 0;
+            color: white;
+            font-weight: 600;
+        }
+
+        .exchange-rate-section label {
+            font-size: 16px;
+        }
+
+        .exchange-rate-section input {
+            width: 100px;
+            padding: 8px 12px;
+            border: 2px solid white;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .exchange-rate-section input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .exchange-rate-section span {
+            font-size: 16px;
+        }
+
+        .update-btn {
+            padding: 8px 20px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .update-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .help-icon {
+            cursor: help;
+            font-size: 18px;
+        }
+
         /* シナリオ選択 */
         .scenario-buttons {
             display: flex;
@@ -269,15 +328,25 @@
             </div>
         </div>
 
+        <!-- 為替レート設定 -->
+        <h2>💱 為替レート設定</h2>
+        <div class="exchange-rate-section">
+            <label for="exchangeRateInput">1 EUR =</label>
+            <input type="number" id="exchangeRateInput" value="160" step="1" min="1">
+            <span>JPY</span>
+            <button id="updateExchangeRate" class="update-btn">更新</button>
+            <span class="help-icon" title="EDF案件の結果に円換算の参考値が表示されます">ℹ️</span>
+        </div>
+
         <h2>📊 ベースライン・パラメータ（編集可能）</h2>
         <table class="baseline-table" id="baselineTable">
             <thead>
                 <tr>
                     <th>パラメータ</th>
-                    <th>J0<br><small>JR東海（現行）</small></th>
-                    <th>JA<br><small>JR東海（国家支援型）</small></th>
-                    <th>E0<br><small>EDF（政策支援型）</small></th>
-                    <th>EB<br><small>EDF（自己完結型）</small></th>
+                    <th>J0 (億円)<br><small>JR東海（現行）</small></th>
+                    <th>JA (億円)<br><small>JR東海（国家支援型）</small></th>
+                    <th>E0 (億€)<br><small>EDF（政策支援型）</small></th>
+                    <th>EB (億€)<br><small>EDF（自己完結型）</small></th>
                 </tr>
             </thead>
             <tbody id="baselineTableBody">
@@ -304,19 +373,23 @@
         // 1. データ構造定義
         // ========================================
 
-        // 1-1. ケース定義
+        // 為替レート設定（1 EUR = JPY）
+        let exchangeRate = 160;
+
+        // 1-1. ケース定義（金額は億円または億ユーロ単位）
         const cases = [
             {
                 caseId: 'J0',
                 label: 'JR東海+リニア（現行）',
                 sponsor: 'JR東海',
                 schemeType: 'self-contained',
-                revenue: 1.5e12,        // 1.5兆円
-                ebitda: 5.0e11,         // 5,000億円
-                netDebt: 5.0e12,        // 5兆円（リニア含む）
+                currency: 'JPY',
+                revenue: 15000,         // 1.5兆円
+                ebitda: 5000,           // 5,000億円
+                netDebt: 50000,         // 5兆円（リニア含む）
                 avgInterestRate: 0.015, // 1.5%
-                operatingCF: 5.0e11,    // EBITDA と同じと仮定
-                capex: 3.0e11,          // 3,000億円/年
+                operatingCF: 5000,      // EBITDA と同じと仮定
+                capex: 3000,            // 3,000億円/年
                 debtAmortYears: 30,     // 30年償還
                 supportShare: 0.0       // 政策支援なし
             },
@@ -325,13 +398,14 @@
                 label: 'JR東海+リニア（国家支援型）',
                 sponsor: 'JR東海',
                 schemeType: 'policy-supported',
-                revenue: 1.5e12,
-                ebitda: 5.0e11,
-                netDebt: 5.0e12,
+                currency: 'JPY',
+                revenue: 15000,         // 1.5兆円
+                ebitda: 5000,           // 5,000億円
+                netDebt: 50000,         // 5兆円
                 avgInterestRate: 0.005, // 0.5%（優遇金利）
-                operatingCF: 5.0e11,
-                capex: 3.0e11,
-                debtAmortYears: 30,
+                operatingCF: 5000,      // EBITDA と同じと仮定
+                capex: 3000,            // 3,000億円/年
+                debtAmortYears: 30,     // 30年償還
                 supportShare: 0.4       // 40%を政策が吸収
             },
             {
@@ -339,12 +413,13 @@
                 label: 'EDF+EPR2（政策支援型）',
                 sponsor: 'EDF',
                 schemeType: 'policy-supported',
-                revenue: 1.5e13,        // 15兆円相当
-                ebitda: 2.0e12,         // 2兆円
-                netDebt: 6.0e12,        // 6兆円
+                currency: 'EUR',
+                revenue: 10000,         // 1,000億ユーロ
+                ebitda: 2000,           // 200億ユーロ
+                netDebt: 6000,          // 600億ユーロ
                 avgInterestRate: 0.020, // 2.0%
-                operatingCF: 2.0e12,
-                capex: 8.0e11,          // 8,000億円/年
+                operatingCF: 2000,      // EBITDA と同じと仮定
+                capex: 800,             // 80億ユーロ/年
                 debtAmortYears: 35,     // 35年償還
                 supportShare: 0.5       // 50%を政策が吸収（CfD/RAB）
             },
@@ -353,13 +428,14 @@
                 label: 'EDF+EPR2（自己完結型）',
                 sponsor: 'EDF',
                 schemeType: 'self-contained',
-                revenue: 1.5e13,
-                ebitda: 2.0e12,
-                netDebt: 6.0e12,
+                currency: 'EUR',
+                revenue: 10000,         // 1,000億ユーロ
+                ebitda: 2000,           // 200億ユーロ
+                netDebt: 6000,          // 600億ユーロ
                 avgInterestRate: 0.035, // 3.5%（市場金利）
-                operatingCF: 2.0e12,
-                capex: 8.0e11,
-                debtAmortYears: 35,
+                operatingCF: 2000,      // EBITDA と同じと仮定
+                capex: 800,             // 80億ユーロ/年
+                debtAmortYears: 35,     // 35年償還
                 supportShare: 0.0       // 政策支援なし
             }
         ];
@@ -476,12 +552,12 @@
             tbody.innerHTML = '';
 
             const params = [
-                { key: 'revenue', label: '年間売上高（円）', unit: '円' },
-                { key: 'ebitda', label: 'EBITDA（円）', unit: '円' },
-                { key: 'netDebt', label: 'Net Debt（円）', unit: '円' },
+                { key: 'revenue', label: '年間売上高', unit: '億' },
+                { key: 'ebitda', label: 'EBITDA', unit: '億' },
+                { key: 'netDebt', label: 'Net Debt', unit: '億' },
                 { key: 'avgInterestRate', label: '平均金利', unit: '%', isPercent: true },
-                { key: 'operatingCF', label: '営業CF（円）', unit: '円' },
-                { key: 'capex', label: 'CAPEX（円）', unit: '円' },
+                { key: 'operatingCF', label: '営業CF', unit: '億' },
+                { key: 'capex', label: 'CAPEX', unit: '億' },
                 { key: 'debtAmortYears', label: '償還年数', unit: '年' },
                 { key: 'supportShare', label: '政策支援吸収割合', unit: '%', isPercent: true }
             ];
@@ -499,10 +575,10 @@
 
                     const input = document.createElement('input');
                     input.type = 'number';
-                    input.step = param.isPercent ? '0.01' : 'any';
+                    input.step = param.isPercent ? '0.01' : '1';
                     input.value = param.isPercent
                         ? (caseObj[param.key] * 100).toFixed(2)
-                        : caseObj[param.key].toExponential(2);
+                        : caseObj[param.key].toString();
                     input.dataset.caseId = caseObj.caseId;
                     input.dataset.paramKey = param.key;
                     input.dataset.isPercent = param.isPercent || false;
@@ -681,12 +757,20 @@
                     const valueCell = document.createElement('td');
                     valueCell.className = 'metric-value';
 
-                    const formattedValue = formatValue(metric.stressed, metric.format);
+                    const formattedValue = formatValue(metric.stressed, metric.format, caseObj.currency);
                     const change = ((metric.stressed - metric.baseline) / metric.baseline) * 100;
                     const changeClass = getChangeClass(change, metric.reverse);
 
+                    // EDF案件で通貨指標の場合、円換算を追加
+                    let jpyConversion = '';
+                    if (caseObj.currency === 'EUR' && metric.format === 'currency') {
+                        const jpyValue = metric.stressed * exchangeRate;
+                        jpyConversion = `<div style="font-size: 9px; color: #7f8c8d; margin-top: 2px;">(≈¥${jpyValue.toFixed(0)}億円)</div>`;
+                    }
+
                     valueCell.innerHTML = `
                         ${formattedValue}
+                        ${jpyConversion}
                         <div style="font-size: 10px; margin-top: 2px;" class="${changeClass}">
                             (${change >= 0 ? '+' : ''}${change.toFixed(1)}%)
                         </div>
@@ -705,16 +789,12 @@
         // 4. ユーティリティ関数
         // ========================================
 
-        function formatValue(value, format) {
+        function formatValue(value, format, currency = 'JPY') {
             if (format === 'currency') {
-                const absValue = Math.abs(value);
-                if (absValue >= 1e12) {
-                    return `¥${(value / 1e12).toFixed(2)}兆`;
-                } else if (absValue >= 1e9) {
-                    return `¥${(value / 1e9).toFixed(0)}億`;
-                } else {
-                    return `¥${(value / 1e6).toFixed(0)}百万`;
-                }
+                // 値は既に億単位で渡されることを想定
+                const symbol = currency === 'EUR' ? '€' : '¥';
+                const unit = currency === 'EUR' ? '億€' : '億円';
+                return `${symbol}${value.toFixed(0)}${unit}`;
             } else if (format === 'ratio') {
                 return value.toFixed(2) + 'x';
             }
@@ -741,6 +821,21 @@
             generateBaselineTable();
             generateScenarioButtons();
             updateResults(scenarios[0]);  // ベースラインシナリオで初期化
+
+            // 為替レート更新ボタンのイベントリスナー
+            document.getElementById('updateExchangeRate').addEventListener('click', () => {
+                const newRate = parseFloat(document.getElementById('exchangeRateInput').value);
+                if (newRate > 0) {
+                    exchangeRate = newRate;
+                    // 現在のシナリオで再計算
+                    const activeScenario = scenarios.find(s =>
+                        document.querySelector(`[data-scenario-id="${s.scenarioId}"]`)?.classList.contains('active')
+                    );
+                    if (activeScenario) {
+                        updateResults(activeScenario);
+                    }
+                }
+            });
         });
     </script>
 </body>
