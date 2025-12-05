@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インフラファイナンス ストレスシミュレーター</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin: 30px 0 15px 0;
+            font-size: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+
+        /* ベースライン編集テーブル */
+        .baseline-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 13px;
+        }
+
+        .baseline-table th {
+            background: #34495e;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .baseline-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .baseline-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .baseline-table input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .baseline-table input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        /* ケース識別色 */
+        .case-j0 { background-color: #e8f4f8; }
+        .case-ja { background-color: #fff4e6; }
+        .case-e0 { background-color: #f0f9ff; }
+        .case-eb { background-color: #fef2f2; }
+
+        /* シナリオ選択 */
+        .scenario-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 12px 24px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .scenario-btn.active {
+            background: #2980b9;
+            color: white;
+            border-color: #2980b9;
+        }
+
+        /* 結果表示テーブル */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .case-card {
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .case-header {
+            padding: 15px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .case-header-j0 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .case-header-ja { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .case-header-e0 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .case-header-eb { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .metrics-table {
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .metrics-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #34495e;
+            width: 60%;
+        }
+
+        .metric-value {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+        }
+
+        .section-header {
+            background: #ecf0f1;
+            padding: 8px 10px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 変化率の色分け */
+        .change-positive { color: #27ae60; font-weight: 600; }
+        .change-negative { color: #e74c3c; font-weight: 600; }
+        .change-neutral { color: #95a5a6; }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ヘルプテキスト */
+        .help-text {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 12px 16px;
+            margin: 20px 0;
+            font-size: 13px;
+            color: #2c3e50;
+            border-radius: 4px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            font-size: 12px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ インフラファイナンス ストレスシミュレーター</h1>
+        <p class="subtitle">JR東海・EDF を題材とした財務ストレステスト（Net Debt/EBITDA, Free CF, DSCR）</p>
+
+        <div class="help-text">
+            📘 <strong>使い方：</strong> 下記のベースライン値を編集後、シナリオボタンをクリックして各ケースの財務指標を比較できます。
+        </div>
+
+        <!-- 凡例 -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box case-j0"></div>
+                <span>J0: JR東海+リニア（現行・自己完結型）</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box case-ja"></div>
+                <span>JA: JR東海+リニア（仮想・国家支援型）</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box case-e0"></div>
+                <span>E0: EDF+EPR2（現行・政策支援型）</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box case-eb"></div>
+                <span>EB: EDF+EPR2（仮想・自己完結型）</span>
+            </div>
+        </div>
+
+        <h2>📊 ベースライン・パラメータ（編集可能）</h2>
+        <table class="baseline-table" id="baselineTable">
+            <thead>
+                <tr>
+                    <th>パラメータ</th>
+                    <th>J0<br><small>JR東海（現行）</small></th>
+                    <th>JA<br><small>JR東海（国家支援型）</small></th>
+                    <th>E0<br><small>EDF（政策支援型）</small></th>
+                    <th>EB<br><small>EDF（自己完結型）</small></th>
+                </tr>
+            </thead>
+            <tbody id="baselineTableBody">
+                <!-- JavaScriptで動的生成 -->
+            </tbody>
+        </table>
+
+        <h2>🎯 シナリオ選択</h2>
+        <div class="scenario-buttons" id="scenarioButtons">
+            <!-- JavaScriptで動的生成 -->
+        </div>
+
+        <h2>📈 財務指標シミュレーション結果</h2>
+        <div id="currentScenario" style="text-align: center; font-size: 16px; font-weight: 600; color: #2c3e50; margin: 20px 0;">
+            シナリオ: <span id="scenarioLabel">ベースライン</span>
+        </div>
+        <div class="results-grid" id="resultsGrid">
+            <!-- JavaScriptで動的生成 -->
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // 1. データ構造定義
+        // ========================================
+
+        // 1-1. ケース定義
+        const cases = [
+            {
+                caseId: 'J0',
+                label: 'JR東海+リニア（現行）',
+                sponsor: 'JR東海',
+                schemeType: 'self-contained',
+                revenue: 1.5e12,        // 1.5兆円
+                ebitda: 5.0e11,         // 5,000億円
+                netDebt: 5.0e12,        // 5兆円（リニア含む）
+                avgInterestRate: 0.015, // 1.5%
+                operatingCF: 5.0e11,    // EBITDA と同じと仮定
+                capex: 3.0e11,          // 3,000億円/年
+                debtAmortYears: 30,     // 30年償還
+                supportShare: 0.0       // 政策支援なし
+            },
+            {
+                caseId: 'JA',
+                label: 'JR東海+リニア（国家支援型）',
+                sponsor: 'JR東海',
+                schemeType: 'policy-supported',
+                revenue: 1.5e12,
+                ebitda: 5.0e11,
+                netDebt: 5.0e12,
+                avgInterestRate: 0.005, // 0.5%（優遇金利）
+                operatingCF: 5.0e11,
+                capex: 3.0e11,
+                debtAmortYears: 30,
+                supportShare: 0.4       // 40%を政策が吸収
+            },
+            {
+                caseId: 'E0',
+                label: 'EDF+EPR2（政策支援型）',
+                sponsor: 'EDF',
+                schemeType: 'policy-supported',
+                revenue: 1.5e13,        // 15兆円相当
+                ebitda: 2.0e12,         // 2兆円
+                netDebt: 6.0e12,        // 6兆円
+                avgInterestRate: 0.020, // 2.0%
+                operatingCF: 2.0e12,
+                capex: 8.0e11,          // 8,000億円/年
+                debtAmortYears: 35,     // 35年償還
+                supportShare: 0.5       // 50%を政策が吸収（CfD/RAB）
+            },
+            {
+                caseId: 'EB',
+                label: 'EDF+EPR2（自己完結型）',
+                sponsor: 'EDF',
+                schemeType: 'self-contained',
+                revenue: 1.5e13,
+                ebitda: 2.0e12,
+                netDebt: 6.0e12,
+                avgInterestRate: 0.035, // 3.5%（市場金利）
+                operatingCF: 2.0e12,
+                capex: 8.0e11,
+                debtAmortYears: 35,
+                supportShare: 0.0       // 政策支援なし
+            }
+        ];
+
+        // 1-2. シナリオ定義
+        const scenarios = [
+            {
+                scenarioId: 'base',
+                label: 'ベースライン（ショックなし）',
+                demandShock: 0.0,
+                capexShock: 0.0,
+                rateShock: 0.0
+            },
+            {
+                scenarioId: 'demand_-20',
+                label: '需要 -20%',
+                demandShock: -0.2,
+                capexShock: 0.0,
+                rateShock: 0.0
+            },
+            {
+                scenarioId: 'capex_+30',
+                label: 'CAPEX +30%',
+                demandShock: 0.0,
+                capexShock: 0.3,
+                rateShock: 0.0
+            },
+            {
+                scenarioId: 'rate_+1',
+                label: '金利 +1.0%pt',
+                demandShock: 0.0,
+                capexShock: 0.0,
+                rateShock: 0.01
+            }
+        ];
+
+        // ========================================
+        // 2. 計算ロジック
+        // ========================================
+
+        // 2-1. ベースライン指標計算
+        function calculateBaselineMetrics(caseObj) {
+            const netDebtToEbitda = caseObj.netDebt / caseObj.ebitda;
+            const interestExpense = caseObj.netDebt * caseObj.avgInterestRate;
+            const principalRepayment = caseObj.netDebt / caseObj.debtAmortYears;
+            const debtService = interestExpense + principalRepayment;
+            const dscr = caseObj.operatingCF / debtService;
+            const freeCF = caseObj.operatingCF - caseObj.capex;
+
+            return {
+                revenue: caseObj.revenue,
+                ebitda: caseObj.ebitda,
+                netDebt: caseObj.netDebt,
+                netDebtToEbitda,
+                interestExpense,
+                principalRepayment,
+                debtService,
+                dscr,
+                operatingCF: caseObj.operatingCF,
+                capex: caseObj.capex,
+                freeCF
+            };
+        }
+
+        // 2-2. ショック適用後の指標計算
+        function simulateCase(caseObj, scenarioObj) {
+            // 実効ショック計算（supportShare で按分）
+            const effectiveDemandShock = scenarioObj.demandShock * (1 - caseObj.supportShare);
+            const effectiveCapexShock = scenarioObj.capexShock * (1 - caseObj.supportShare);
+            const effectiveRateShock = scenarioObj.rateShock * (1 - caseObj.supportShare);
+
+            // ストレス後の値
+            const revenueStressed = caseObj.revenue * (1 + effectiveDemandShock);
+            const ebitdaStressed = caseObj.ebitda * (1 + effectiveDemandShock);
+            const operatingCFStressed = caseObj.operatingCF * (1 + effectiveDemandShock);
+            const capexStressed = caseObj.capex * (1 + effectiveCapexShock);
+            const interestRateStressed = caseObj.avgInterestRate + effectiveRateShock;
+
+            // 財務指標計算
+            const netDebtToEbitda = caseObj.netDebt / ebitdaStressed;
+            const interestExpense = caseObj.netDebt * interestRateStressed;
+            const principalRepayment = caseObj.netDebt / caseObj.debtAmortYears;
+            const debtService = interestExpense + principalRepayment;
+            const dscr = operatingCFStressed / debtService;
+            const freeCF = operatingCFStressed - capexStressed;
+
+            return {
+                revenue: revenueStressed,
+                ebitda: ebitdaStressed,
+                netDebt: caseObj.netDebt,
+                netDebtToEbitda,
+                interestExpense,
+                principalRepayment,
+                debtService,
+                dscr,
+                operatingCF: operatingCFStressed,
+                capex: capexStressed,
+                freeCF,
+                effectiveShocks: {
+                    demand: effectiveDemandShock,
+                    capex: effectiveCapexShock,
+                    rate: effectiveRateShock
+                }
+            };
+        }
+
+        // ========================================
+        // 3. UI生成・更新
+        // ========================================
+
+        // 3-1. ベースライン編集テーブル生成
+        function generateBaselineTable() {
+            const tbody = document.getElementById('baselineTableBody');
+            tbody.innerHTML = '';
+
+            const params = [
+                { key: 'revenue', label: '年間売上高（円）', unit: '円' },
+                { key: 'ebitda', label: 'EBITDA（円）', unit: '円' },
+                { key: 'netDebt', label: 'Net Debt（円）', unit: '円' },
+                { key: 'avgInterestRate', label: '平均金利', unit: '%', isPercent: true },
+                { key: 'operatingCF', label: '営業CF（円）', unit: '円' },
+                { key: 'capex', label: 'CAPEX（円）', unit: '円' },
+                { key: 'debtAmortYears', label: '償還年数', unit: '年' },
+                { key: 'supportShare', label: '政策支援吸収割合', unit: '%', isPercent: true }
+            ];
+
+            params.forEach(param => {
+                const row = document.createElement('tr');
+                const labelCell = document.createElement('td');
+                labelCell.textContent = param.label;
+                labelCell.style.fontWeight = '600';
+                row.appendChild(labelCell);
+
+                cases.forEach(caseObj => {
+                    const cell = document.createElement('td');
+                    cell.className = `case-${caseObj.caseId.toLowerCase()}`;
+
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.step = param.isPercent ? '0.01' : 'any';
+                    input.value = param.isPercent
+                        ? (caseObj[param.key] * 100).toFixed(2)
+                        : caseObj[param.key].toExponential(2);
+                    input.dataset.caseId = caseObj.caseId;
+                    input.dataset.paramKey = param.key;
+                    input.dataset.isPercent = param.isPercent || false;
+
+                    input.addEventListener('change', handleBaselineChange);
+
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                });
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // 3-2. ベースライン値変更ハンドラ
+        function handleBaselineChange(event) {
+            const input = event.target;
+            const caseId = input.dataset.caseId;
+            const paramKey = input.dataset.paramKey;
+            const isPercent = input.dataset.isPercent === 'true';
+
+            const caseObj = cases.find(c => c.caseId === caseId);
+            if (caseObj) {
+                caseObj[paramKey] = isPercent
+                    ? parseFloat(input.value) / 100
+                    : parseFloat(input.value);
+
+                // 現在のシナリオで再計算
+                const activeScenario = scenarios.find(s =>
+                    document.querySelector(`[data-scenario-id="${s.scenarioId}"]`)?.classList.contains('active')
+                );
+                if (activeScenario) {
+                    updateResults(activeScenario);
+                }
+            }
+        }
+
+        // 3-3. シナリオボタン生成
+        function generateScenarioButtons() {
+            const container = document.getElementById('scenarioButtons');
+            container.innerHTML = '';
+
+            scenarios.forEach((scenario, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'scenario-btn';
+                if (index === 0) btn.classList.add('active');
+                btn.textContent = scenario.label;
+                btn.dataset.scenarioId = scenario.scenarioId;
+                btn.addEventListener('click', () => handleScenarioClick(scenario));
+                container.appendChild(btn);
+            });
+        }
+
+        // 3-4. シナリオクリックハンドラ
+        function handleScenarioClick(scenario) {
+            // ボタンの active 状態更新
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.scenarioId === scenario.scenarioId) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // ラベル更新
+            document.getElementById('scenarioLabel').textContent = scenario.label;
+
+            // 結果更新
+            updateResults(scenario);
+        }
+
+        // 3-5. 結果表示更新
+        function updateResults(scenario) {
+            const grid = document.getElementById('resultsGrid');
+            grid.innerHTML = '';
+
+            cases.forEach(caseObj => {
+                const baseline = calculateBaselineMetrics(caseObj);
+                const stressed = simulateCase(caseObj, scenario);
+
+                const card = createCaseCard(caseObj, baseline, stressed);
+                grid.appendChild(card);
+            });
+        }
+
+        // 3-6. ケースカード生成
+        function createCaseCard(caseObj, baseline, stressed) {
+            const card = document.createElement('div');
+            card.className = 'case-card';
+
+            // ヘッダー
+            const header = document.createElement('div');
+            header.className = `case-header case-header-${caseObj.caseId.toLowerCase()}`;
+            header.innerHTML = `
+                <div>${caseObj.caseId}: ${caseObj.sponsor}</div>
+                <div style="font-size: 11px; font-weight: 400; margin-top: 4px;">
+                    ${caseObj.schemeType === 'self-contained' ? '自己完結型' : '政策支援型'}
+                </div>
+            `;
+            card.appendChild(header);
+
+            // メトリクステーブル
+            const table = document.createElement('table');
+            table.className = 'metrics-table';
+
+            const metrics = [
+                { section: '主要指標' },
+                {
+                    label: 'Net Debt / EBITDA',
+                    baseline: baseline.netDebtToEbitda,
+                    stressed: stressed.netDebtToEbitda,
+                    format: 'ratio',
+                    reverse: true  // 高いほど悪い
+                },
+                {
+                    label: 'Free Cash Flow',
+                    baseline: baseline.freeCF,
+                    stressed: stressed.freeCF,
+                    format: 'currency',
+                    reverse: false  // 高いほど良い
+                },
+                {
+                    label: 'DSCR',
+                    baseline: baseline.dscr,
+                    stressed: stressed.dscr,
+                    format: 'ratio',
+                    reverse: false  // 高いほど良い
+                },
+                { section: '中間計算値' },
+                {
+                    label: 'Interest Expense',
+                    baseline: baseline.interestExpense,
+                    stressed: stressed.interestExpense,
+                    format: 'currency'
+                },
+                {
+                    label: 'Principal Repayment',
+                    baseline: baseline.principalRepayment,
+                    stressed: stressed.principalRepayment,
+                    format: 'currency'
+                },
+                {
+                    label: 'Debt Service',
+                    baseline: baseline.debtService,
+                    stressed: stressed.debtService,
+                    format: 'currency'
+                },
+                {
+                    label: 'Operating CF',
+                    baseline: baseline.operatingCF,
+                    stressed: stressed.operatingCF,
+                    format: 'currency'
+                },
+                {
+                    label: 'CAPEX',
+                    baseline: baseline.capex,
+                    stressed: stressed.capex,
+                    format: 'currency'
+                }
+            ];
+
+            metrics.forEach(metric => {
+                const row = document.createElement('tr');
+
+                if (metric.section) {
+                    const cell = document.createElement('td');
+                    cell.colSpan = 2;
+                    cell.className = 'section-header';
+                    cell.textContent = metric.section;
+                    row.appendChild(cell);
+                } else {
+                    const labelCell = document.createElement('td');
+                    labelCell.className = 'metric-label';
+                    labelCell.textContent = metric.label;
+                    row.appendChild(labelCell);
+
+                    const valueCell = document.createElement('td');
+                    valueCell.className = 'metric-value';
+
+                    const formattedValue = formatValue(metric.stressed, metric.format);
+                    const change = ((metric.stressed - metric.baseline) / metric.baseline) * 100;
+                    const changeClass = getChangeClass(change, metric.reverse);
+
+                    valueCell.innerHTML = `
+                        ${formattedValue}
+                        <div style="font-size: 10px; margin-top: 2px;" class="${changeClass}">
+                            (${change >= 0 ? '+' : ''}${change.toFixed(1)}%)
+                        </div>
+                    `;
+                    row.appendChild(valueCell);
+                }
+
+                table.appendChild(row);
+            });
+
+            card.appendChild(table);
+            return card;
+        }
+
+        // ========================================
+        // 4. ユーティリティ関数
+        // ========================================
+
+        function formatValue(value, format) {
+            if (format === 'currency') {
+                const absValue = Math.abs(value);
+                if (absValue >= 1e12) {
+                    return `¥${(value / 1e12).toFixed(2)}兆`;
+                } else if (absValue >= 1e9) {
+                    return `¥${(value / 1e9).toFixed(0)}億`;
+                } else {
+                    return `¥${(value / 1e6).toFixed(0)}百万`;
+                }
+            } else if (format === 'ratio') {
+                return value.toFixed(2) + 'x';
+            }
+            return value.toFixed(2);
+        }
+
+        function getChangeClass(changePercent, reverse) {
+            if (Math.abs(changePercent) < 0.1) {
+                return 'change-neutral';
+            }
+
+            const isGood = reverse
+                ? changePercent < 0  // reverse=true: 減少が良い
+                : changePercent > 0; // reverse=false: 増加が良い
+
+            return isGood ? 'change-positive' : 'change-negative';
+        }
+
+        // ========================================
+        // 5. 初期化
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateBaselineTable();
+            generateScenarioButtons();
+            updateResults(scenarios[0]);  // ベースラインシナリオで初期化
+        });
+    </script>
+</body>
+</html>
