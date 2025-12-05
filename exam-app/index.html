@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>放射線取扱主任者試験 学習アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 放射線取扱主任者試験 学習アプリ</h1>
+            <p class="subtitle">第１種放射線取扱主任者 - 物理</p>
+        </header>
+
+        <div class="controls">
+            <div class="mode-selector">
+                <label class="mode-label">採点モード：</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="gradingMode" value="batch" checked>
+                        <span>📝 一括採点モード</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="gradingMode" value="instant">
+                        <span>⚡ 即時判定モード</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="gradeBtn" class="btn btn-primary">採点する</button>
+                <button id="resetBtn" class="btn btn-secondary">リセット</button>
+            </div>
+        </div>
+
+        <div id="progressBar" class="progress-container" style="display: none;">
+            <div class="progress-text">
+                <span id="answeredCount">0</span> / <span id="totalCount">0</span> 問回答済み
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div id="scoreDisplay" class="score-display" style="display: none;">
+            <h2>📊 採点結果</h2>
+            <div class="score-content">
+                <div class="score-large">
+                    <span id="scoreValue">0</span> / <span id="totalQuestions">0</span>
+                </div>
+                <div class="score-percentage">
+                    正答率: <span id="scorePercentage">0</span>%
+                </div>
+            </div>
+        </div>
+
+        <div id="questionsContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
