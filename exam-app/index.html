@@ -27,6 +27,40 @@
             <p class="subtitle">第１種放射線取扱主任者 - 物理</p>
         </header>
 
+        <!-- 問題作成者用セクション -->
+        <div class="creator-section">
+            <details>
+                <summary class="creator-toggle">📁 問題作成者用機能</summary>
+                <div class="creator-content">
+                    <p class="creator-description">
+                        JSONファイルから問題データを読み込みます。読み込んだ状態でアプリを配布できます。
+                    </p>
+                    <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+                    <button id="loadJsonBtn" class="btn btn-creator">📁 JSONファイルを読み込む</button>
+                    <div id="jsonLoadStatus" class="load-status"></div>
+                </div>
+            </details>
+        </div>
+
+        <!-- 回答の保存・読み込みセクション -->
+        <div class="save-load-section">
+            <details>
+                <summary class="save-toggle">💾 回答の保存・読み込み</summary>
+                <div class="save-content">
+                    <div class="save-buttons">
+                        <button id="saveAnswersBtn" class="btn btn-save">💾 回答を保存</button>
+                        <button id="loadAnswersBtn" class="btn btn-load">📂 回答を読み込み</button>
+                    </div>
+                    <div class="export-import-buttons">
+                        <button id="exportAnswersBtn" class="btn btn-export">📤 回答をエクスポート</button>
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        <button id="importAnswersBtn" class="btn btn-import">📥 回答をインポート</button>
+                    </div>
+                    <div id="saveLoadStatus" class="load-status"></div>
+                </div>
+            </details>
+        </div>
+
         <div class="controls">
             <div class="mode-selector">
                 <label class="mode-label">採点モード：</label>
@@ -66,6 +100,9 @@
                 <div class="score-percentage">
                     正答率: <span id="scorePercentage">0</span>%
                 </div>
+            </div>
+            <div class="result-actions">
+                <button id="saveResultBtn" class="btn btn-result-save">💾 採点結果を保存（HTML）</button>
             </div>
         </div>
 
