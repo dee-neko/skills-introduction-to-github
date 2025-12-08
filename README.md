@@ -49,3 +49,30 @@ In this exercise, you will:
 ---
 
 &copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+
+## Reactor kinetics learning app (Android draft)
+
+This branch also includes a lightweight Kotlin/Jetpack Compose draft for a point-kinetics learning app targeting Android devices. The draft lives in `android-app/` and focuses on:
+
+- **Core model**: 1-group delayed neutron point kinetics with adjustable ρ, β, Λ, λ and Euler integration (`core/model/ReactorKinetics.kt`).
+- **Visualization**: Minimal Compose `Canvas` line chart for neutron density time-series (`ui/components/TimeSeriesChart.kt`).
+- **UI stubs**: Parameter input and simulation trigger (`ui/screens/SimulationScreen.kt`), lesson text (`LessonScreen.kt`), and quiz interactions (`QuizScreen.kt`).
+
+ These files are scaffolding to align with the requested feature breakdown and can be moved into a full Android project structure for compilation.
+
+### Where the Android draft lives
+
+- ソース配置: `android-app/`
+  - モデル: `android-app/core/model/ReactorKinetics.kt`
+  - グラフ描画: `android-app/ui/components/TimeSeriesChart.kt`
+  - 画面スタブ: `android-app/ui/screens/SimulationScreen.kt`, `LessonScreen.kt`, `QuizScreen.kt`
+
+### 動かし方（既存のAndroid Studioプロジェクトへ取り込む場合）
+
+1. Android Studioで、新規に **Empty Compose Activity**（Kotlin, Compose有効）プロジェクトを作成し、`minSdk` を 24 以上に設定します。
+2. 生成されたプロジェクト直下（例: `app/src/main/java/...` のパッケージ配下）に、このリポジトリの `android-app/core` と `android-app/ui` ディレクトリをコピーします。
+3. パッケージ名をプロジェクトに合わせて調整します（`package` 行とインポート先）。
+4. `SimulationScreen` などの画面を `setContent { ... }` から呼び出し、`MainActivity` に組み込みます。
+5. Gradle Sync を実行し、`Run` またはエミュレータ／実機でビルド・実行します。
+
+> 注: このリポジトリには `build.gradle` などのプロジェクト設定は含まれていません。上記の手順で既存のCompose対応プロジェクトにコードを配置して動作させてください。
