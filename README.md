@@ -2,6 +2,14 @@
 
 _Get started using GitHub in less than an hour._
 
+## 放射線主任者向け学習アプリ (HTML版)
+
+このリポジトリ直下の `index.html` をブラウザで開くと、オフラインで動作する単一ページの学習アプリが起動します。
+
+- `sample-questions.csv` を同梱しており、開くだけでサンプル問題（最大10問）が表示されます。
+- 別の問題セットを使う場合は画面上部の「問題CSVを読み込む」から任意のCSVを選択してください（列は `wireframe.md` 参照）。
+- 採点後に正誤・解説・分野別集計が表示され、直近結果はブラウザに保存されます。
+
 ## Welcome
 
 People use GitHub to build some of the most advanced technologies in the world. Whether you’re visualizing data or building a new game, there’s a whole community and set of tools on GitHub that can help you do it even better. GitHub Skills’ “Introduction to GitHub” exercise guides you through everything you need to start contributing in less than an hour.

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>放射線主任者 試験学習アプリ (MVP)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --accent: #0ea5e9;
+      --accent-strong: #22c55e;
+      --warn: #f97316;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 20px 16px 8px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 1.4rem;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px 48px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 12px 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .file-input {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="file"] {
+      color: var(--text);
+      max-width: 260px;
+    }
+
+    button {
+      appearance: none;
+      background: var(--accent);
+      color: #0b1628;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+      transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.45);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 4px 0 0;
+    }
+
+    .questions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .question-title {
+      font-weight: 700;
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .category {
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+
+    label.choice {
+      display: block;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: border-color 120ms ease, background 120ms ease;
+    }
+
+    label.choice:hover, label.choice:has(input:focus-visible) {
+      border-color: var(--accent);
+      background: rgba(14, 165, 233, 0.08);
+      outline: none;
+    }
+
+    label.choice input {
+      margin-right: 10px;
+      accent-color: var(--accent);
+    }
+
+    .explanation {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-left: 4px solid var(--accent);
+      background: rgba(14, 165, 233, 0.08);
+      border-radius: 8px;
+      display: none;
+    }
+
+    .explanation.show {
+      display: block;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+    .result-badge.correct {
+      background: rgba(34, 197, 94, 0.15);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+
+    .result-badge.incorrect {
+      background: rgba(249, 115, 22, 0.18);
+      color: #ffedd5;
+      border: 1px solid rgba(249, 115, 22, 0.35);
+    }
+
+    .score-summary {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.25rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .history {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      button {
+        width: 100%;
+        text-align: center;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .question-header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>放射線主任者 試験学習アプリ (MVP)</h1>
+    <p class="subtitle">10問固定・オフライン対応。CSVを差し替えるだけで問題更新できます。</p>
+  </header>
+  <main>
+    <section class="panel">
+      <div class="controls">
+        <div class="file-input">
+          <label for="csvFile">問題CSVを読み込む:</label>
+          <input id="csvFile" type="file" accept=".csv" />
+        </div>
+        <div>
+          <button id="reloadBtn" class="secondary" type="button">サンプル問題でリセット</button>
+          <button id="scoreBtn" type="button">採点する</button>
+          <button id="retryBtn" class="secondary" type="button" disabled>もう一度チャレンジ</button>
+        </div>
+      </div>
+      <p class="hint">各問は1つのみ選択。採点後に全問の正誤・解説・分野別集計を表示します。直近の結果はブラウザに保存されます。</p>
+    </section>
+
+    <section id="summary" class="panel" style="display:none;"></section>
+
+    <section id="questions" class="questions" aria-live="polite"></section>
+
+    <section id="history" class="panel" style="display:none;"></section>
+  </main>
+
+  <script>
+    const QUESTIONS_LIMIT = 10;
+    const SUMMARY_EL = document.getElementById('summary');
+    const QUESTIONS_EL = document.getElementById('questions');
+    const HISTORY_EL = document.getElementById('history');
+    const SCORE_BTN = document.getElementById('scoreBtn');
+    const RETRY_BTN = document.getElementById('retryBtn');
+    const RELOAD_BTN = document.getElementById('reloadBtn');
+    const CSV_INPUT = document.getElementById('csvFile');
+    const STORAGE_KEY = 'quiz-app-latest-score';
+
+    const FALLBACK_QUESTIONS = `id,question,choice1,choice2,choice3,choice4,answer,explanation,category
+Q1,"光子エネルギーEと波長λの関係として正しいのはどれか。",E = hc/λ,E = hλ/c,E = c/(hλ),E = λ/(hc),1,"プランク定数hと光速cを用い、E = hc/λで表される。",物理基礎
+Q2,"半減期T1/2と壊変定数λの関係式はどれか。",T1/2 = λ ln2,T1/2 = ln2 / λ,T1/2 = λ / ln2,T1/2 = 1 / (λ ln2),2,"放射能の減衰 N(t)=N0 e^{-λt} より T1/2 = ln2 / λ。",放射能
+Q3,"1 Ci は毎秒何回の崩壊に相当するか。",3.7×10^7 Bq,3.7×10^10 Bq,1×10^6 Bq,1×10^10 Bq,2,"1 Bq=1 s^{-1}、1 Ci = 3.7×10^{10} s^{-1}。",単位`;
+
+    let questions = [];
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      if (!lines.length) return [];
+      const headers = splitCSVLine(lines[0]);
+      return lines.slice(1).map((line) => {
+        const cols = splitCSVLine(line);
+        const entry = {};
+        headers.forEach((h, i) => entry[h.trim()] = (cols[i] || '').trim());
+        return entry;
+      });
+    }
+
+    function splitCSVLine(line) {
+      const regex = /"(?:[^"]|"")*"|[^,]+/g;
+      const matches = line.match(regex) || [];
+      return matches.map((value) => {
+        const trimmed = value.trim();
+        if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+          return trimmed.slice(1, -1).replace(/""/g, '"');
+        }
+        return trimmed;
+      });
+    }
+
+    async function loadFromFile(file) {
+      const text = await file.text();
+      return parseCSV(text);
+    }
+
+    async function loadSample() {
+      try {
+        const res = await fetch('sample-questions.csv');
+        if (!res.ok) throw new Error('fetch failed');
+        const text = await res.text();
+        const parsed = parseCSV(text);
+        return parsed.length ? parsed : parseCSV(FALLBACK_QUESTIONS);
+      } catch (err) {
+        console.warn('Failed to fetch sample CSV, using fallback data.', err);
+        return parseCSV(FALLBACK_QUESTIONS);
+      }
+    }
+
+    function renderQuestions(data) {
+      QUESTIONS_EL.innerHTML = '';
+      const limited = data.slice(0, QUESTIONS_LIMIT);
+      limited.forEach((q, idx) => {
+        const card = document.createElement('article');
+        card.className = 'question-card';
+
+        const header = document.createElement('div');
+        header.className = 'question-header';
+
+        const title = document.createElement('p');
+        title.className = 'question-title';
+        title.textContent = `${idx + 1}. ${q.question}`;
+
+        const category = document.createElement('span');
+        category.className = 'category';
+        category.textContent = q.category ? `分野: ${q.category}` : '';
+
+        header.append(title, category);
+
+        const choices = document.createElement('div');
+        choices.className = 'choices';
+
+        [1,2,3,4].forEach((n) => {
+          const value = q[`choice${n}`];
+          if (!value) return;
+          const label = document.createElement('label');
+          label.className = 'choice';
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = q.id || `q${idx}`;
+          input.value = String(n);
+          label.append(input, document.createTextNode(value));
+          choices.appendChild(label);
+        });
+
+        const explanation = document.createElement('div');
+        explanation.className = 'explanation';
+        explanation.textContent = q.explanation || '解説が未登録です。';
+
+        card.append(header, choices, explanation);
+        QUESTIONS_EL.appendChild(card);
+      });
+    }
+
+    function scoreQuiz() {
+      if (!questions.length) return;
+      let correct = 0;
+      const results = [];
+      const categories = new Map();
+      const cards = Array.from(document.querySelectorAll('.question-card'));
+
+      cards.forEach((card, idx) => {
+        const q = questions[idx];
+        const checked = card.querySelector('input[type="radio"]:checked');
+        const selected = checked ? checked.value : null;
+        const isCorrect = selected === String(q.answer);
+        if (isCorrect) correct += 1;
+        const badge = document.createElement('span');
+        badge.className = `result-badge ${isCorrect ? 'correct' : 'incorrect'}`;
+        badge.textContent = isCorrect ? '正解' : '不正解';
+
+        const header = card.querySelector('.question-header');
+        header.querySelectorAll('.result-badge').forEach((b) => b.remove());
+        header.appendChild(badge);
+
+        const explanation = card.querySelector('.explanation');
+        explanation.classList.add('show');
+
+        const cat = q.category || '未分類';
+        if (!categories.has(cat)) {
+          categories.set(cat, { total: 0, correct: 0 });
+        }
+        categories.get(cat).total += 1;
+        if (isCorrect) categories.get(cat).correct += 1;
+
+        results.push({ ...q, isCorrect, selected });
+      });
+
+      const total = cards.length;
+      renderSummary({ total, correct, categories });
+      storeHistory({ total, correct, categories });
+      RETRY_BTN.disabled = false;
+    }
+
+    function renderSummary({ total, correct, categories }) {
+      const percent = total ? Math.round((correct / total) * 100) : 0;
+      const rows = Array.from(categories.entries()).map(([cat, stat]) => {
+        const pct = stat.total ? Math.round((stat.correct / stat.total) * 100) : 0;
+        return `<tr><td>${cat}</td><td>${stat.correct}/${stat.total}</td><td>${pct}%</td></tr>`;
+      }).join('');
+
+      SUMMARY_EL.innerHTML = `
+        <div class="score-summary">
+          <div class="stat-grid">
+            <div class="stat">
+              <strong>${correct} / ${total}</strong>
+              正答数
+            </div>
+            <div class="stat">
+              <strong>${percent}%</strong>
+              正答率
+            </div>
+          </div>
+          <div>
+            <h3>分野別サマリー</h3>
+            <table aria-label="分野別集計">
+              <thead><tr><th>分野</th><th>正答/出題</th><th>正答率</th></tr></thead>
+              <tbody>${rows || '<tr><td colspan="3">分野情報なし</td></tr>'}</tbody>
+            </table>
+          </div>
+        </div>`;
+      SUMMARY_EL.style.display = 'block';
+    }
+
+    function storeHistory({ total, correct, categories }) {
+      const payload = {
+        total,
+        correct,
+        categories: Array.from(categories.entries()),
+        timestamp: new Date().toISOString(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) return;
+      try {
+        const data = JSON.parse(stored);
+        const percent = data.total ? Math.round((data.correct / data.total) * 100) : 0;
+        const date = new Date(data.timestamp).toLocaleString('ja-JP');
+        const rows = (data.categories || []).map(([cat, stat]) => {
+          const pct = stat.total ? Math.round((stat.correct / stat.total) * 100) : 0;
+          return `<tr><td>${cat}</td><td>${stat.correct}/${stat.total}</td><td>${pct}%</td></tr>`;
+        }).join('');
+
+        HISTORY_EL.innerHTML = `
+          <div class="history">
+            <strong>前回の結果 (${date})</strong><br />
+            正答: ${data.correct}/${data.total} (${percent}%)
+            <table aria-label="前回の分野別集計">
+              <thead><tr><th>分野</th><th>正答/出題</th><th>正答率</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>`;
+        HISTORY_EL.style.display = 'block';
+      } catch (err) {
+        console.warn('Failed to read history', err);
+      }
+    }
+
+    function resetState() {
+      SUMMARY_EL.style.display = 'none';
+      HISTORY_EL.style.display = HISTORY_EL.innerHTML ? 'block' : 'none';
+      RETRY_BTN.disabled = true;
+      QUESTIONS_EL.querySelectorAll('.result-badge').forEach((b) => b.remove());
+      QUESTIONS_EL.querySelectorAll('.explanation').forEach((ex) => ex.classList.remove('show'));
+      QUESTIONS_EL.querySelectorAll('input[type="radio"]').forEach((input) => input.checked = false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function initWithSample() {
+      questions = await loadSample();
+      renderQuestions(questions);
+      resetState();
+    }
+
+    CSV_INPUT.addEventListener('change', async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      questions = await loadFromFile(file);
+      if (!questions.length) {
+        alert('CSVを読み込めませんでした。フォーマットをご確認ください。');
+        return;
+      }
+      renderQuestions(questions);
+      resetState();
+    });
+
+    SCORE_BTN.addEventListener('click', scoreQuiz);
+    RETRY_BTN.addEventListener('click', resetState);
+    RELOAD_BTN.addEventListener('click', initWithSample);
+
+    (async function bootstrap() {
+      await initWithSample();
+      renderHistory();
+    })();
+  </script>
+</body>
+</html>
