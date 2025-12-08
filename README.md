@@ -49,3 +49,12 @@ In this exercise, you will:
 ---
 
 &copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+## Stress simulation tool usage
+
+このリポジトリの `stress_simulation.py` は pandas に依存しています。実行前に以下で依存パッケージをインストールしてください（ローカル環境での実行を想定）。
+
+```bash
+pip install -r requirements.txt
+```
+
+ネットワーク制限などでインストールできない場合は、オフラインで取得済みのホイールを利用するか、組織のパッケージリポジトリを経由してインストールしてください。
