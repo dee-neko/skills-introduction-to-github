@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>シンプルなブロック崩し</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 20%, #f7f7f7, #dfe9f3 60%);
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+    }
+    canvas {
+      border: 2px solid rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.15);
+    }
+    #hud {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.08);
+      color: #111;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">← → キーでパドルを操作</div>
+  <canvas id="game" width="520" height="360" aria-label="ブロック崩しゲーム"></canvas>
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    const ball = { x: canvas.width / 2, y: canvas.height - 40, vx: 3.5, vy: -3.5, r: 7 };
+    const paddle = { w: 96, h: 12, x: (canvas.width - 96) / 2, speed: 6 };
+    const blocks = [];
+    const rows = 4, cols = 8;
+    const bw = 56, bh = 20, gap = 10;
+    const offset = { x: 24, y: 40 };
+    let right = false, left = false;
+    let lives = 3, score = 0, cleared = 0;
+
+    for (let c = 0; c < cols; c++) {
+      for (let r = 0; r < rows; r++) {
+        blocks.push({
+          x: offset.x + c * (bw + gap),
+          y: offset.y + r * (bh + gap),
+          alive: true,
+          hue: 180 + r * 25
+        });
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') right = true;
+      if (e.key === 'ArrowLeft') left = true;
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowRight') right = false;
+      if (e.key === 'ArrowLeft') left = false;
+      if (e.key === 'r') reset();
+    });
+
+    function reset() {
+      ball.x = canvas.width / 2;
+      ball.y = canvas.height - 40;
+      ball.vx = 3.5 * (Math.random() > 0.5 ? 1 : -1);
+      ball.vy = -3.5;
+      paddle.x = (canvas.width - paddle.w) / 2;
+    }
+
+    function drawBlocks() {
+      blocks.forEach((b) => {
+        if (!b.alive) return;
+        const gradient = ctx.createLinearGradient(b.x, b.y, b.x, b.y + bh);
+        gradient.addColorStop(0, `hsl(${b.hue}, 80%, 65%)`);
+        gradient.addColorStop(1, `hsl(${b.hue + 15}, 70%, 55%)`);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(b.x, b.y, bw, bh);
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.strokeRect(b.x, b.y, bw, bh);
+      });
+    }
+
+    function updateBall() {
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      if (ball.x < ball.r || ball.x > canvas.width - ball.r) ball.vx *= -1;
+      if (ball.y < ball.r) ball.vy *= -1;
+
+      const paddleY = canvas.height - paddle.h - 14;
+      if (
+        ball.y + ball.r >= paddleY &&
+        ball.x > paddle.x &&
+        ball.x < paddle.x + paddle.w
+      ) {
+        const hitPoint = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+        ball.vx = hitPoint * 4.2;
+        ball.vy = -Math.abs(ball.vy);
+        ball.y = paddleY - ball.r;
+      }
+
+      blocks.forEach((b) => {
+        if (!b.alive) return;
+        if (
+          ball.x > b.x &&
+          ball.x < b.x + bw &&
+          ball.y > b.y &&
+          ball.y < b.y + bh
+        ) {
+          ball.vy *= -1;
+          b.alive = false;
+          score += 10;
+          cleared += 1;
+        }
+      });
+
+      if (ball.y > canvas.height + ball.r) {
+        lives -= 1;
+        reset();
+        if (lives <= 0) {
+          lives = 3;
+          score = 0;
+          cleared = 0;
+          blocks.forEach((b) => (b.alive = true));
+        }
+      }
+
+      if (cleared === rows * cols) {
+        blocks.forEach((b) => (b.alive = true));
+        cleared = 0;
+        reset();
+        score += 100;
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBlocks();
+
+      ctx.fillStyle = '#1e88e5';
+      const paddleY = canvas.height - paddle.h - 14;
+      ctx.fillRect(paddle.x, paddleY, paddle.w, paddle.h);
+
+      const gradient = ctx.createRadialGradient(ball.x, ball.y, 4, ball.x, ball.y, 20);
+      gradient.addColorStop(0, '#ff6f61');
+      gradient.addColorStop(1, '#e53935');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#0d47a1';
+      ctx.font = 'bold 14px Inter, system-ui, sans-serif';
+      ctx.fillText(`Score: ${score}`, 12, 20);
+      ctx.fillText(`Lives: ${lives}`, canvas.width - 80, 20);
+    }
+
+    function update() {
+      if (right) paddle.x += paddle.speed;
+      if (left) paddle.x -= paddle.speed;
+      paddle.x = Math.max(0, Math.min(canvas.width - paddle.w, paddle.x));
+      updateBall();
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>
