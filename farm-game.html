@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>農場経営シミュレーション</title>
+    <link rel="stylesheet" href="farm-game.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>🌻 農場経営シミュレーション 🌻</h1>
+        </header>
+
+        <div class="game-info">
+            <div class="player-info">
+                <div class="player-avatar">👧</div>
+                <div class="player-stats">
+                    <p><strong>プレイヤー:</strong> <span id="player-name">さくら</span></p>
+                    <p><strong>所持金:</strong> <span id="money">1000</span>円</p>
+                    <p><strong>レベル:</strong> <span id="level">1</span></p>
+                </div>
+            </div>
+
+            <div class="timer-section">
+                <p><strong>残り時間:</strong> <span id="timer">300</span>秒</p>
+                <button id="start-game" class="btn btn-primary">ゲーム開始</button>
+            </div>
+        </div>
+
+        <div class="mission-panel">
+            <h2>🎯 今回のミッション</h2>
+            <div id="mission-list">
+                <p>✓ トマトを3個収穫する</p>
+                <p>✓ ニワトリを2羽育てる</p>
+                <p>✓ 所持金を2000円にする</p>
+            </div>
+            <div id="mission-status" class="mission-incomplete">未達成</div>
+        </div>
+
+        <div class="farm-section">
+            <div class="crops-area">
+                <h2>🌾 農場エリア</h2>
+                <div class="farm-grid" id="farm-grid">
+                    <!-- 3x3のグリッド -->
+                </div>
+                <div class="crop-actions">
+                    <h3>作物を植える</h3>
+                    <button class="btn btn-crop" data-crop="tomato">🍅 トマト (100円)</button>
+                    <button class="btn btn-crop" data-crop="carrot">🥕 ニンジン (80円)</button>
+                    <button class="btn btn-crop" data-crop="wheat">🌾 小麦 (60円)</button>
+                </div>
+            </div>
+
+            <div class="animals-area">
+                <h2>🐮 家畜エリア</h2>
+                <div class="animals-grid" id="animals-grid">
+                    <!-- 家畜を表示 -->
+                </div>
+                <div class="animal-actions">
+                    <h3>家畜を購入</h3>
+                    <button class="btn btn-animal" data-animal="chicken">🐔 ニワトリ (200円)</button>
+                    <button class="btn btn-animal" data-animal="cow">🐄 ウシ (500円)</button>
+                    <button class="btn btn-animal" data-animal="sheep">🐑 ヒツジ (300円)</button>
+                    <div style="margin-top: 10px;">
+                        <button id="feed-all" class="btn btn-secondary">すべての家畜に餌をやる (50円)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="log-section">
+            <h3>📋 ログ</h3>
+            <div id="game-log"></div>
+        </div>
+    </div>
+
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="result-title">結果</h2>
+            <p id="result-message"></p>
+            <button id="restart-game" class="btn btn-primary">もう一度プレイ</button>
+        </div>
+    </div>
+
+    <script src="farm-game.js"></script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #87CEEB 0%, #98D8C8 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #FFF8DC;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #90EE90 0%, #228B22 100%);
+    border-radius: 10px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+    font-size: 2em;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #FFE4B5;
+    border-radius: 10px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.player-avatar {
+    font-size: 3em;
+}
+
+.player-stats p {
+    margin: 5px 0;
+}
+
+.timer-section {
+    text-align: right;
+}
+
+.timer-section p {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #D2691E;
+}
+
+.mission-panel {
+    background-color: #FFF5EE;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 3px solid #FFD700;
+}
+
+.mission-panel h2 {
+    margin-bottom: 10px;
+    color: #8B4513;
+}
+
+#mission-list p {
+    margin: 5px 0;
+    padding-left: 10px;
+}
+
+#mission-status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mission-incomplete {
+    background-color: #FFB6C1;
+    color: #8B0000;
+}
+
+.mission-complete {
+    background-color: #90EE90;
+    color: #006400;
+}
+
+.farm-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.crops-area, .animals-area {
+    background-color: #F5DEB3;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.crops-area h2, .animals-area h2 {
+    margin-bottom: 15px;
+    color: #8B4513;
+}
+
+.farm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.farm-plot {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #8B4513;
+    border: 3px solid #654321;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative;
+}
+
+.farm-plot:hover {
+    transform: scale(1.05);
+}
+
+.farm-plot.empty {
+    background-color: #A0522D;
+}
+
+.farm-plot.growing {
+    background-color: #8FBC8F;
+}
+
+.farm-plot.ready {
+    background-color: #32CD32;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.growth-bar {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.growth-progress {
+    height: 100%;
+    background-color: #FFD700;
+    transition: width 1s linear;
+}
+
+.animals-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+    min-height: 150px;
+}
+
+.animal-slot {
+    background-color: #DEB887;
+    border: 3px solid #8B7355;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+}
+
+.animal-slot .hunger-bar {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.animal-slot .hunger-level {
+    height: 100%;
+    background-color: #32CD32;
+    transition: width 1s linear;
+}
+
+.animal-slot.hungry .hunger-level {
+    background-color: #FF6347;
+}
+
+.crop-actions, .animal-actions {
+    border-top: 2px dashed #8B4513;
+    padding-top: 15px;
+}
+
+.crop-actions h3, .animal-actions h3 {
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #654321;
+}
+
+.btn {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background-color: #32CD32;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #228B22;
+}
+
+.btn-secondary {
+    background-color: #FFD700;
+    color: #8B4513;
+}
+
+.btn-secondary:hover {
+    background-color: #FFA500;
+}
+
+.btn-crop {
+    background-color: #90EE90;
+    color: #006400;
+}
+
+.btn-crop:hover {
+    background-color: #7CCD7C;
+}
+
+.btn-animal {
+    background-color: #DDA0DD;
+    color: #4B0082;
+}
+
+.btn-animal:hover {
+    background-color: #DA70D6;
+}
+
+.log-section {
+    background-color: #FAFAD2;
+    padding: 15px;
+    border-radius: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.log-section h3 {
+    margin-bottom: 10px;
+    color: #8B4513;
+}
+
+#game-log {
+    font-size: 0.9em;
+}
+
+.log-entry {
+    padding: 5px;
+    margin: 3px 0;
+    border-left: 3px solid #32CD32;
+    padding-left: 10px;
+}
+
+.log-entry.error {
+    border-left-color: #FF6347;
+    color: #8B0000;
+}
+
+.log-entry.success {
+    border-left-color: #FFD700;
+    color: #006400;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #FFF8DC;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+    .farm-section {
+        grid-template-columns: 1fr;
+    }
+
+    .game-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .timer-section {
+        text-align: center;
+    }
+}
