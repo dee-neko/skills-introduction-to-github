@@ -49,3 +49,26 @@ In this exercise, you will:
 ---
 
 &copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+
+## 講義依頼文の生成
+
+CSVファイルから講義依頼文を生成するスクリプトを追加しました。CSVの1行が1件の依頼文になります。
+
+### 生成対象のCSVカラム
+
+| カラム名 | 必須/任意 | 説明 |
+| --- | --- | --- |
+| 講師 | 必須 | 宛名となる講師名 |
+| 講師所属 | 必須 | 講師の所属 |
+| 研修名 | 必須 | 研修の名称 |
+| 講義日時 | 必須 | 講義の日時 |
+| 講義課目 | 必須 | 講義の課目 |
+| 備考 | 任意 | 追加の補足事項 |
+
+### 使い方
+
+```bash
+python3 generate_requests.py --csv /path/to/requests.csv
+```
+
+出力は標準出力に表示され、複数行ある場合は `---` 区切りで並びます。
