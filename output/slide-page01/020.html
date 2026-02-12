@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Thank You</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide relative bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+            <i class="fas fa-flask text-blue-300 text-6xl mb-8 opacity-60"></i>
+            <h1 class="text-5xl font-black mb-6">Thank You</h1>
+            <h2 class="text-3xl font-bold mb-12">ご清聴ありがとうございました</h2>
+
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-8 max-w-2xl">
+                <p class="text-lg font-bold mb-6 text-center">お問い合わせ先</p>
+                <div class="space-y-4 text-base">
+                    <div class="flex items-center">
+                        <i class="fas fa-globe text-blue-300 mr-4 text-xl w-8"></i>
+                        <p class="font-accent">https://science.osti.gov/grants</p>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope text-blue-300 mr-4 text-xl w-8"></i>
+                        <p class="font-accent">sc.grants@science.doe.gov</p>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-phone text-blue-300 mr-4 text-xl w-8"></i>
+                        <p class="font-accent">1-301-903-5212</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-sm opacity-75 mt-12 font-accent">U.S. Department of Energy | Office of Science</p>
+            <p class="text-xs opacity-60 mt-2 font-accent">FY 2026 Continuation of Solicitation for Financial Assistance Program</p>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400"></div>
+    </div>
+</body>
+</html>

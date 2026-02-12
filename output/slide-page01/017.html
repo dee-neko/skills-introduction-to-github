@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>審査プロセス</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col">
+        <div class="bg-brand-dark px-16 py-6">
+            <p class="text-xs uppercase tracking-widest text-blue-300 mb-1 font-accent">Review Process</p>
+            <h1 class="text-3xl font-bold text-white">審査プロセス（段階的絞り込み）</h1>
+        </div>
+        <div class="flex-1 px-16 py-12 flex items-center justify-center">
+            <div class="space-y-6 w-full max-w-4xl">
+                <div class="flex items-center">
+                    <div class="w-full bg-gradient-to-r from-blue-500 to-blue-400 h-24 rounded-lg shadow-lg flex items-center justify-between px-8">
+                        <p class="text-white text-xl font-bold">応募提案</p>
+                        <p class="text-white text-4xl font-black font-accent">500<span class="text-xl ml-2">件</span></p>
+                    </div>
+                    <i class="fas fa-arrow-down text-gray-400 text-3xl mx-8"></i>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-5/6 bg-gradient-to-r from-indigo-500 to-indigo-400 h-24 rounded-lg shadow-lg flex items-center justify-between px-8 ml-auto">
+                        <p class="text-white text-xl font-bold">書類審査通過</p>
+                        <p class="text-white text-4xl font-black font-accent">350<span class="text-xl ml-2">件</span></p>
+                    </div>
+                    <i class="fas fa-arrow-down text-gray-400 text-3xl mx-8"></i>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-3/5 bg-gradient-to-r from-purple-500 to-purple-400 h-24 rounded-lg shadow-lg flex items-center justify-between px-8 ml-auto">
+                        <p class="text-white text-xl font-bold">ピアレビュー通過</p>
+                        <p class="text-white text-4xl font-black font-accent">180<span class="text-xl ml-2">件</span></p>
+                    </div>
+                    <i class="fas fa-arrow-down text-gray-400 text-3xl mx-8"></i>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-2/5 bg-gradient-to-r from-amber-500 to-orange-400 h-24 rounded-lg shadow-lg flex items-center justify-between px-8 ml-auto">
+                        <p class="text-white text-xl font-bold">最終選考</p>
+                        <p class="text-white text-4xl font-black font-accent">120<span class="text-xl ml-2">件</span></p>
+                    </div>
+                    <i class="fas fa-arrow-down text-gray-400 text-3xl mx-8"></i>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-1/4 bg-gradient-to-r from-green-600 to-green-500 h-24 rounded-lg shadow-lg flex items-center justify-between px-8 ml-auto">
+                        <p class="text-white text-xl font-bold">採択</p>
+                        <p class="text-white text-4xl font-black font-accent">80<span class="text-xl ml-2">件</span></p>
+                    </div>
+                </div>
+                <div class="mt-4 bg-blue-50 border-l-4 border-brand-accent p-4 rounded">
+                    <p class="text-sm text-gray-700"><i class="fas fa-chart-line text-brand-accent mr-2"></i>平均採択率：約16%（過去3年間の実績）</p>
+                </div>
+            </div>
+        </div>
+        <div class="px-16 py-4 border-t border-gray-200 flex justify-between items-center">
+            <p class="text-xs text-gray-500">FY 2026 Office of Science Financial Assistance Program</p>
+            <p class="text-xs text-gray-400 font-accent">17</p>
+        </div>
+    </div>
+</body>
+</html>
