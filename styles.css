@@ -1,0 +1,83 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #1f8f56, #0f4f2f);
+  color: #fff;
+}
+
+.container {
+  width: min(680px, 92vw);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+}
+
+h1,
+h2 {
+  margin: 0.4rem 0;
+}
+
+.description {
+  opacity: 0.9;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.5rem 0;
+}
+
+.card {
+  width: 56px;
+  height: 78px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: #fdfdfd;
+  color: #1b1b1b;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: 1px solid #ddd;
+}
+
+.card.red {
+  color: #bb1824;
+}
+
+.hand-text {
+  margin-top: 0;
+  opacity: 0.95;
+}
+
+button {
+  margin-top: 0.8rem;
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #ffd54f;
+  color: #2b1b00;
+}
+
+button:hover {
+  filter: brightness(1.06);
+}
+
+.result {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
