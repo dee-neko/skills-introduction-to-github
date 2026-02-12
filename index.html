@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>深層防護カードバトル v0.1</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>⚛️ 深層防護カードバトル v0.1</h1>
+      <p class="description">親は毎ターン3枚引いて1枚選択。プレイヤーは防御カードを選んで安全度4000を守り切ります。</p>
+
+      <section class="status-grid">
+        <p>ターン: <strong id="turn">-</strong> / 5</p>
+        <p>安全度: <strong id="safety">-</strong></p>
+      </section>
+
+      <section>
+        <h2>操作</h2>
+        <div class="actions">
+          <button id="init-btn">ゲーム初期化</button>
+          <button id="draw-btn" disabled>親が3枚引く</button>
+          <button id="resolve-btn" disabled>選択攻撃を解決</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>親の候補攻撃（3枚）</h2>
+        <div id="attack-candidates" class="cards"></div>
+      </section>
+
+      <section>
+        <h2>防御カード候補（最大2枚選択）</h2>
+        <div id="defense-options" class="cards"></div>
+      </section>
+
+      <section>
+        <h2>ログ</h2>
+        <pre id="log" class="log">「ゲーム初期化」を押してください。</pre>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
