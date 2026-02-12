@@ -3,25 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>深層防護カードバトル v0.1</title>
+    <title>深層防護カードバトル v0.2</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="container">
-      <h1>⚛️ 深層防護カードバトル v0.1</h1>
-      <p class="description">親は毎ターン3枚引いて1枚選択。プレイヤーは防御カードを選んで安全度4000を守り切ります。</p>
+      <h1>⚛️ 深層防護カードバトル v0.2</h1>
+      <p class="description">相談時間後に親が攻撃を確定し、トラップ宣言フェーズ（攻撃確定後〜ダメージ計算前）で防御を宣言します。</p>
 
       <section class="status-grid">
         <p>ターン: <strong id="turn">-</strong> / 5</p>
         <p>安全度: <strong id="safety">-</strong></p>
+        <p>フェーズ: <strong id="phase">-</strong></p>
+        <p>相談タイマー: <strong id="consult-timer">-</strong></p>
+      </section>
+
+      <section>
+        <h2>設定</h2>
+        <div class="settings-row">
+          <label for="consult-seconds">相談時間(秒)</label>
+          <input id="consult-seconds" type="number" min="10" max="180" value="45" />
+        </div>
       </section>
 
       <section>
         <h2>操作</h2>
         <div class="actions">
           <button id="init-btn">ゲーム初期化</button>
-          <button id="draw-btn" disabled>親が3枚引く</button>
-          <button id="resolve-btn" disabled>選択攻撃を解決</button>
+          <button id="draw-btn" disabled>親が3枚引く（相談開始）</button>
+          <button id="trap-phase-btn" disabled>トラップ宣言フェーズへ</button>
+          <button id="resolve-btn" disabled>ダメージ計算を実行</button>
         </div>
       </section>
 
@@ -31,12 +42,12 @@
       </section>
 
       <section>
-        <h2>防御カード候補（最大2枚選択）</h2>
+        <h2>防御カード候補（部署ベース / 最大2枚）</h2>
         <div id="defense-options" class="cards"></div>
       </section>
 
       <section>
-        <h2>ログ</h2>
+        <h2>詳細ログ</h2>
         <pre id="log" class="log">「ゲーム初期化」を押してください。</pre>
       </section>
     </main>
