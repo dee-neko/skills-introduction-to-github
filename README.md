@@ -1,51 +1,198 @@
-# Introduction to GitHub
+# 講義依頼文書生成ツール
 
-_Get started using GitHub in less than an hour._
+CSVファイルから講義依頼文書を自動生成するWebアプリケーション
 
-## Welcome
+## 概要
 
-People use GitHub to build some of the most advanced technologies in the world. Whether you’re visualizing data or building a new game, there’s a whole community and set of tools on GitHub that can help you do it even better. GitHub Skills’ “Introduction to GitHub” exercise guides you through everything you need to start contributing in less than an hour.
+講義依頼業務において、複数の講師に対して同様の依頼文書を作成する作業は繰り返しが多く時間がかかります。このツールは、CSVファイルから講義依頼文書を自動生成し、メールクライアントで使用できる下書きファイル（.eml形式）またはプレーンテキスト（.txt形式）として出力することで、この作業を大幅に効率化します。
 
-- **Who is this for**: New developers, new GitHub users, and students.
-- **What you'll learn**: We'll introduce repositories, branches, commits, and pull requests.
-- **What you'll build**: We'll make a short Markdown file you can use as your [profile README](https://docs.github.com/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme).
-- **Prerequisites**: None. This exercise is a great introduction for your first day on GitHub.
-- **How long**: This exercise takes less than one hour to complete.
+## 機能
 
-In this exercise, you will:
+- ✅ CSVファイルのアップロード（ドラッグ&ドロップ対応）
+- ✅ データプレビューとバリデーション
+- ✅ テンプレートのカスタマイズ（Handlebars構文）
+- ✅ 文書の一括生成とプレビュー
+- ✅ メール下書きの自動生成（.eml形式）
+- ✅ テキストファイルの出力（.txt形式）
+- ✅ 個別・一括ダウンロード機能
 
-1. Create a branch
-2. Commit a file
-3. Open a pull request
-4. Merge your pull request
+## デモ
 
-### How to start this exercise
+（GitHub Pagesでデプロイ後、ここにURLを追加）
 
-1. Right-click **Copy Exercise** and open the link in a new tab.
+## 使い方
 
-   <a id="copy-exercise">
-      <img src="https://img.shields.io/badge/📠_Copy_Exercise-AAA" height="25pt"/>
-   </a>
+### 1. CSVファイルを準備
 
-2. In the new tab, most of the prompts will automatically fill in for you.
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will [use Actions minutes](https://docs.github.chttps://github.com/dee-neko/skills-introduction-to-github/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
+以下のカラムを含むCSVファイルを用意してください：
 
-3. After your new repository is created, wait about 20 seconds for the exercise to be prepared and buttons updated. You will continue working from your copy of the exercise.
-   - The **Copy Exercise** button will deactivate, changing to gray.
-   - The **Start Exercise** button will activate, changing to green.
-   - You will likely need to refresh the page.
+| カラム名 | 説明 | 必須 |
+|---------|------|------|
+| 課目名 | 講義の課目名 | ✓ |
+| 講師名 | 講師の名前 | ✓ |
+| 所属 | 講師の所属 | ✓ |
+| 講義日時 | 講義の日時 | ✓ |
+| 講義場所 | 講義の場所 | ✓ |
+| 担当者名 | 依頼担当者の名前 | ✓ |
+| 担当者メール | 依頼担当者のメールアドレス | ✓ |
+| 備考 | その他の備考事項 | - |
 
-4. Click **Start Exercise**. Follow the step-by-step instructions and feedback will be provided as you progress.
+**サンプル**: [`examples/sample-data.csv`](examples/sample-data.csv) をダウンロード
 
-   <a id="start-exercise" href="https://github.com/dee-neko/skills-introduction-to-github/issues/1">
-      <img src="https://img.shields.io/badge/🚀_Start_Exercise-008000" height="25pt"/>
-   </a>
+### 2. アプリケーションを開く
 
-> [!IMPORTANT]
-> The **Start Exercise** button will activate after copying the repository. You will probably need to refresh the page.
+ブラウザで `index.html` を開きます。
+
+### 3. CSVファイルをアップロード
+
+- ドラッグ&ドロップ、またはファイル選択ボタンでCSVファイルをアップロード
+- データプレビューが表示されます
+
+### 4. テンプレートを確認・編集（オプション）
+
+- デフォルトテンプレートが表示されます
+- 必要に応じて編集してください
+- テンプレート編集ガイド: [`examples/template-guide.md`](examples/template-guide.md)
+
+### 5. 文書を生成
+
+- 「文書を生成」ボタンをクリック
+- 生成された文書がプレビュー表示されます
+
+### 6. エクスポート
+
+- 出力形式（.eml / .txt）を選択
+- 個別ダウンロード、または一括ダウンロード
+
+## ローカル実行方法
+
+### 必要な環境
+
+- モダンなWebブラウザ（Chrome、Firefox、Safari、Edgeの最新版）
+- ローカルHTTPサーバー（開発時）
+
+### ローカルサーバーの起動
+
+```bash
+# Python 3の場合
+python -m http.server 8080
+
+# Node.jsの場合
+npx serve .
+```
+
+ブラウザで `http://localhost:8080` にアクセス
+
+## 技術スタック
+
+- **HTML5 + CSS3 + JavaScript (ES6+)**: フレームワーク不要のシンプルな構成
+- **PapaParse**: CSV解析ライブラリ
+- **Handlebars.js**: テンプレートエンジン
+- **FileSaver.js**: ファイルダウンロード
+
+すべてのライブラリはCDN経由で読み込まれるため、追加のインストールは不要です。
+
+## ファイル構成
+
+```
+lecture-request-generator/
+├── index.html                           # メインページ
+├── css/
+│   ├── reset.css                        # CSSリセット
+│   ├── variables.css                    # CSS変数
+│   └── style.css                        # メインスタイル
+├── js/
+│   ├── app.js                           # アプリケーション制御
+│   ├── modules/
+│   │   ├── csv-handler.js               # CSV解析
+│   │   ├── data-validator.js            # データバリデーション
+│   │   ├── template-manager.js          # テンプレート管理
+│   │   ├── document-generator.js        # 文書生成
+│   │   └── email-exporter.js            # メール出力
+│   └── utils/
+│       ├── date-formatter.js            # 日付フォーマット
+│       └── helpers.js                   # ヘルパー関数
+├── templates/
+│   └── default-template.hbs             # デフォルトテンプレート
+├── examples/
+│   ├── sample-data.csv                  # サンプルCSV
+│   └── template-guide.md                # テンプレートガイド
+└── README.md                            # このファイル
+```
+
+## セキュリティ
+
+- **クライアントサイド完結**: すべての処理がブラウザ上で完結するため、データがサーバーに送信されることはありません
+- **XSS対策**: ユーザー入力のHTMLエスケープ
+- **CSVインジェクション対策**: セル先頭の数式記号を無効化
+
+## ブラウザ互換性
+
+- Chrome（最新版）
+- Firefox（最新版）
+- Safari（最新版）
+- Edge（最新版）
+
+## トラブルシューティング
+
+### CSVファイルがアップロードできない
+
+- ファイルサイズが5MB以内か確認してください
+- 拡張子が `.csv` であることを確認してください
+- 文字エンコーディングがUTF-8であることを確認してください
+
+### テンプレートエラーが表示される
+
+- テンプレート構文が正しいか確認してください
+- `{{変数名}}` の形式が正確か確認してください
+- 詳細は [`examples/template-guide.md`](examples/template-guide.md) を参照
+
+### メールクライアントで開けない
+
+- .eml形式を選択しているか確認してください
+- メールクライアントが.eml形式に対応しているか確認してください
+- テキスト形式（.txt）を試してみてください
+
+## 将来の拡張機能
+
+- テンプレート保存・管理機能（localStorage）
+- Excel（.xlsx）ファイル対応
+- PDF出力機能
+- HTMLメールプレビュー
+- Gmail / Outlook API連携
+
+## ライセンス
+
+MIT License
+
+Copyright (c) 2026
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## コントリビューション
+
+プルリクエストを歓迎します。大きな変更の場合は、まずissueを開いて変更内容を議論してください。
+
+## 作者
+
+Created with Claude Code
 
 ---
 
-&copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+**Note**: このプロジェクトは教育目的で作成されました。

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>講義依頼文書生成ツール</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>講義依頼文書生成ツール</h1>
+            <p class="subtitle">CSVファイルから講義依頼文書を自動生成</p>
+        </header>
+
+        <main class="main">
+            <!-- Step 1: CSV アップロード -->
+            <section class="step" id="step1">
+                <div class="step-header">
+                    <span class="step-number">Step 1</span>
+                    <h2>CSVファイルをアップロード</h2>
+                </div>
+                <div class="step-body">
+                    <div class="upload-zone" id="dropZone">
+                        <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="upload-text">CSVファイルをドラッグ&ドロップ</p>
+                        <p class="upload-text-or">または</p>
+                        <button type="button" class="btn btn-primary" id="fileSelectBtn">ファイルを選択</button>
+                        <input type="file" id="fileInput" accept=".csv" hidden>
+                    </div>
+                    <div class="upload-info">
+                        <a href="examples/sample-data.csv" download class="link">サンプルCSVをダウンロード</a>
+                    </div>
+                    <div id="uploadError" class="alert alert-error" style="display: none;"></div>
+                </div>
+            </section>
+
+            <!-- Step 2: データプレビュー -->
+            <section class="step" id="step2" style="display: none;">
+                <div class="step-header">
+                    <span class="step-number">Step 2</span>
+                    <h2>データプレビュー</h2>
+                </div>
+                <div class="step-body">
+                    <div id="validationErrors" class="alert alert-warning" style="display: none;"></div>
+                    <div class="table-container">
+                        <table class="data-table" id="dataTable">
+                            <thead>
+                                <tr id="tableHeader"></tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-primary" id="proceedToTemplateBtn">次へ</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: テンプレート編集 -->
+            <section class="step" id="step3" style="display: none;">
+                <div class="step-header">
+                    <span class="step-number">Step 3</span>
+                    <h2>テンプレート編集</h2>
+                </div>
+                <div class="step-body">
+                    <div class="template-editor">
+                        <div class="editor-toolbar">
+                            <button type="button" class="btn btn-secondary" id="resetTemplateBtn">デフォルトに戻す</button>
+                        </div>
+                        <textarea id="templateInput" class="template-textarea" rows="20" placeholder="テンプレートを入力してください..."></textarea>
+                        <div class="template-help">
+                            <h4>使用可能な変数:</h4>
+                            <ul class="variable-list">
+                                <li><code>{{課目名}}</code></li>
+                                <li><code>{{講師名}}</code></li>
+                                <li><code>{{所属}}</code></li>
+                                <li><code>{{講義日時}}</code></li>
+                                <li><code>{{講義場所}}</code></li>
+                                <li><code>{{担当者名}}</code></li>
+                                <li><code>{{担当者メール}}</code></li>
+                                <li><code>{{備考}}</code></li>
+                            </ul>
+                            <p class="help-text">条件分岐: <code>{{#if 備考}}...{{/if}}</code></p>
+                        </div>
+                    </div>
+                    <div id="templateError" class="alert alert-error" style="display: none;"></div>
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-primary" id="generateDocumentsBtn">文書を生成</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: 文書プレビュー -->
+            <section class="step" id="step4" style="display: none;">
+                <div class="step-header">
+                    <span class="step-number">Step 4</span>
+                    <h2>文書プレビュー</h2>
+                </div>
+                <div class="step-body">
+                    <div id="previewContainer" class="preview-container"></div>
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-primary" id="proceedToExportBtn">エクスポートへ</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 5: エクスポート -->
+            <section class="step" id="step5" style="display: none;">
+                <div class="step-header">
+                    <span class="step-number">Step 5</span>
+                    <h2>エクスポート</h2>
+                </div>
+                <div class="step-body">
+                    <div class="export-options">
+                        <label class="export-label">出力形式を選択:</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="exportFormat" value="eml" checked>
+                                <span>.eml (メールクライアント用)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="exportFormat" value="txt">
+                                <span>.txt (テキストファイル)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="export-actions">
+                        <button type="button" class="btn btn-primary btn-large" id="downloadAllBtn">すべてダウンロード</button>
+                    </div>
+                    <div class="export-list">
+                        <h3>個別ダウンロード:</h3>
+                        <div id="exportList" class="individual-exports"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 講義依頼文書生成ツール</p>
+        </footer>
+    </div>
+
+    <!-- 外部ライブラリ（CDN） -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@4/dist/handlebars.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2/dist/FileSaver.min.js"></script>
+
+    <!-- アプリケーション -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
