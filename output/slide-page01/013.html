@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>必要書類チェックリスト</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col">
+        <div class="bg-brand-dark px-16 py-6">
+            <p class="text-xs uppercase tracking-widest text-blue-300 mb-1 font-accent">Required Documents</p>
+            <h1 class="text-3xl font-bold text-white">必要書類チェックリスト</h1>
+        </div>
+        <div class="flex-1 px-16 py-10 overflow-hidden">
+            <div class="space-y-3">
+                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-brand-accent flex items-start">
+                    <div class="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-lg mr-5 flex-shrink-0">1</div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-brand-dark mb-1">研究提案書（Project Narrative）</h2>
+                        <p class="text-sm text-gray-600">15ページ以内、研究目的・方法・期待される成果を記載</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-brand-accent flex items-start">
+                    <div class="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-lg mr-5 flex-shrink-0">2</div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-brand-dark mb-1">予算計画書（Budget Justification）</h2>
+                        <p class="text-sm text-gray-600">詳細な経費内訳、人件費・設備費・旅費・その他経費</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-brand-accent flex items-start">
+                    <div class="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-lg mr-5 flex-shrink-0">3</div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-brand-dark mb-1">研究者略歴（CVs / Biosketches）</h2>
+                        <p class="text-sm text-gray-600">PI・共同研究者全員の学歴・職歴・主要論文リスト（NSF形式）</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-brand-accent flex items-start">
+                    <div class="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-lg mr-5 flex-shrink-0">4</div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-brand-dark mb-1">現在・継続中の助成金リスト（Current & Pending Support）</h2>
+                        <p class="text-sm text-gray-600">すべての研究者が受けている助成金の詳細</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-brand-accent flex items-start">
+                    <div class="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-lg mr-5 flex-shrink-0">5</div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-brand-dark mb-1">所属機関からの支援レター（Letters of Support）</h2>
+                        <p class="text-sm text-gray-600">学部長・研究担当副学長からの推薦状</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-brand-accent flex items-start">
+                    <div class="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-lg mr-5 flex-shrink-0">6</div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-brand-dark mb-1">施設・設備情報（Facilities & Resources）</h2>
+                        <p class="text-sm text-gray-600">利用可能な研究設備・計算機資源の説明</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="px-16 py-4 border-t border-gray-200 flex justify-between items-center">
+            <p class="text-xs text-gray-500">FY 2026 Office of Science Financial Assistance Program</p>
+            <p class="text-xs text-gray-400 font-accent">13</p>
+        </div>
+    </div>
+</body>
+</html>

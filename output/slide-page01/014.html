@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>年間スケジュール</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col">
+        <div class="bg-brand-dark px-16 py-6">
+            <p class="text-xs uppercase tracking-widest text-blue-300 mb-1 font-accent">Annual Timeline</p>
+            <h1 class="text-3xl font-bold text-white">FY 2026 年間スケジュール</h1>
+        </div>
+        <div class="flex-1 px-16 py-12">
+            <div class="relative">
+                <div class="absolute top-16 left-0 right-0 h-2 bg-gray-200 rounded-full"></div>
+                <div class="grid grid-cols-4 gap-6 relative">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-xl mb-4 relative z-10 border-4 border-white shadow-lg">Q1</div>
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg shadow w-full">
+                            <h2 class="text-lg font-bold text-brand-dark mb-3">10月～12月</h2>
+                            <p class="text-sm text-gray-700 mb-2 font-bold">FOA公開</p>
+                            <p class="text-xs text-gray-600 leading-relaxed">募集要項発表、事前質問受付、ウェビナー開催</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-xl mb-4 relative z-10 border-4 border-white shadow-lg">Q2</div>
+                        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-lg shadow w-full">
+                            <h2 class="text-lg font-bold text-brand-dark mb-3">1月～3月</h2>
+                            <p class="text-sm text-gray-700 mb-2 font-bold">応募締切</p>
+                            <p class="text-xs text-gray-600 leading-relaxed">3月15日締切、書類不備確認期間</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-brand-accent rounded-full flex items-center justify-center text-white font-black font-accent text-xl mb-4 relative z-10 border-4 border-white shadow-lg">Q3</div>
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg shadow w-full">
+                            <h2 class="text-lg font-bold text-brand-dark mb-3">4月～6月</h2>
+                            <p class="text-sm text-gray-700 mb-2 font-bold">ピアレビュー</p>
+                            <p class="text-xs text-gray-600 leading-relaxed">外部専門家による審査、パネルディスカッション</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-brand-warm rounded-full flex items-center justify-center text-white font-black font-accent text-xl mb-4 relative z-10 border-4 border-white shadow-lg">Q4</div>
+                        <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-lg shadow w-full">
+                            <h2 class="text-lg font-bold text-brand-dark mb-3">7月～9月</h2>
+                            <p class="text-sm text-gray-700 mb-2 font-bold">採択通知・契約</p>
+                            <p class="text-xs text-gray-600 leading-relaxed">結果通知、契約交渉、10月1日研究開始</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 bg-blue-50 border-l-4 border-brand-accent p-4 rounded">
+                <p class="text-sm text-gray-700"><i class="fas fa-info-circle text-brand-accent mr-2"></i><span class="font-bold">重要：</span>締切は東部標準時（EST）午後5:00です。Grants.govシステムのアクセス集中に備えて、早めの提出を推奨します。</p>
+            </div>
+        </div>
+        <div class="px-16 py-4 border-t border-gray-200 flex justify-between items-center">
+            <p class="text-xs text-gray-500">FY 2026 Office of Science Financial Assistance Program</p>
+            <p class="text-xs text-gray-400 font-accent">14</p>
+        </div>
+    </div>
+</body>
+</html>

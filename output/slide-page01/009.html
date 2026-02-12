@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>プログラム比較表</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col">
+        <div class="bg-brand-dark px-16 py-6">
+            <p class="text-xs uppercase tracking-widest text-blue-300 mb-1 font-accent">Comparison Table</p>
+            <h1 class="text-3xl font-bold text-white">プログラム比較表</h1>
+        </div>
+        <div class="flex-1 px-16 py-10 overflow-hidden">
+            <div class="space-y-2">
+                <div class="flex bg-brand-dark text-white rounded-t-lg">
+                    <div class="w-1/4 px-4 py-3 font-bold text-sm">プログラム</div>
+                    <div class="w-1/4 px-4 py-3 font-bold text-sm">助成額（年間）</div>
+                    <div class="w-1/4 px-4 py-3 font-bold text-sm">期間</div>
+                    <div class="w-1/4 px-4 py-3 font-bold text-sm">対象機関</div>
+                </div>
+                <div class="flex bg-blue-50 border-l-4 border-brand-accent">
+                    <div class="w-1/4 px-4 py-3 text-sm font-bold text-brand-dark">BES</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700 font-accent">$500K - $2M</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">3～5年</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">大学・国立研</div>
+                </div>
+                <div class="flex bg-white border-l-4 border-gray-300">
+                    <div class="w-1/4 px-4 py-3 text-sm font-bold text-brand-dark">HEP</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700 font-accent">$300K - $1.5M</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">3～5年</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">大学・研究所</div>
+                </div>
+                <div class="flex bg-blue-50 border-l-4 border-brand-accent">
+                    <div class="w-1/4 px-4 py-3 text-sm font-bold text-brand-dark">NP</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700 font-accent">$400K - $1.2M</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">3～4年</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">大学・国立研</div>
+                </div>
+                <div class="flex bg-white border-l-4 border-gray-300">
+                    <div class="w-1/4 px-4 py-3 text-sm font-bold text-brand-dark">BER</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700 font-accent">$350K - $1M</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">3～5年</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">全機関</div>
+                </div>
+                <div class="flex bg-blue-50 border-l-4 border-brand-accent">
+                    <div class="w-1/4 px-4 py-3 text-sm font-bold text-brand-dark">FES</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700 font-accent">$600K - $2.5M</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">3～5年</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">大学・企業連携</div>
+                </div>
+                <div class="flex bg-white border-l-4 border-gray-300">
+                    <div class="w-1/4 px-4 py-3 text-sm font-bold text-brand-dark">ASCR</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700 font-accent">$250K - $800K</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">2～4年</div>
+                    <div class="w-1/4 px-4 py-3 text-sm text-gray-700">全機関</div>
+                </div>
+            </div>
+            <div class="mt-6 bg-amber-50 border-l-4 border-brand-warm p-4 rounded">
+                <p class="text-xs text-gray-600"><i class="fas fa-info-circle text-brand-warm mr-2"></i>助成額は研究内容と規模により変動します。間接経費は別途計上可能です。</p>
+            </div>
+        </div>
+        <div class="px-16 py-4 border-t border-gray-200 flex justify-between items-center">
+            <p class="text-xs text-gray-500">FY 2026 Office of Science Financial Assistance Program</p>
+            <p class="text-xs text-gray-400 font-accent">09</p>
+        </div>
+    </div>
+</body>
+</html>

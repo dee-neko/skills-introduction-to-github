@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>3つの主要審査基準</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col">
+        <div class="bg-brand-dark px-16 py-6">
+            <p class="text-xs uppercase tracking-widest text-blue-300 mb-1 font-accent">Review Criteria</p>
+            <h1 class="text-3xl font-bold text-white">3つの主要審査基準</h1>
+        </div>
+        <div class="flex-1 px-16 py-12">
+            <div class="grid grid-cols-3 gap-8 h-full">
+                <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-brand-accent flex flex-col">
+                    <i class="fas fa-star text-brand-accent text-5xl mb-6"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">科学的メリット</h2>
+                    <p class="text-base text-gray-700 mb-4 font-bold">配点：50%</p>
+                    <div class="space-y-2 text-sm text-gray-600 leading-relaxed">
+                        <p>• 研究の独創性と重要性</p>
+                        <p>• 科学的妥当性と実現可能性</p>
+                        <p>• 期待される成果とインパクト</p>
+                        <p>• 研究手法の適切性</p>
+                        <p>• 先行研究との差別化</p>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-brand-accent flex flex-col">
+                    <i class="fas fa-users text-brand-accent text-5xl mb-6"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">研究チームの能力</h2>
+                    <p class="text-base text-gray-700 mb-4 font-bold">配点：30%</p>
+                    <div class="space-y-2 text-sm text-gray-600 leading-relaxed">
+                        <p>• PIの研究実績と専門性</p>
+                        <p>• チーム構成の適切性</p>
+                        <p>• 過去の助成金実績</p>
+                        <p>• 共同研究体制の妥当性</p>
+                        <p>• 若手研究者育成計画</p>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-brand-accent flex flex-col">
+                    <i class="fas fa-dollar-sign text-brand-accent text-5xl mb-6"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">予算の妥当性</h2>
+                    <p class="text-base text-gray-700 mb-4 font-bold">配点：20%</p>
+                    <div class="space-y-2 text-sm text-gray-600 leading-relaxed">
+                        <p>• 経費配分の合理性</p>
+                        <p>• コストパフォーマンス</p>
+                        <p>• 設備・施設の活用計画</p>
+                        <p>• 他の資金源との関係</p>
+                        <p>• 間接経費の適切性</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="px-16 py-4 border-t border-gray-200 flex justify-between items-center">
+            <p class="text-xs text-gray-500">FY 2026 Office of Science Financial Assistance Program</p>
+            <p class="text-xs text-gray-400 font-accent">16</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>研究タイプ別分類</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Roboto:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; overflow: hidden; }
+        .font-accent { font-family: 'Roboto', sans-serif; }
+        .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #FFFFFF; }
+        .bg-brand-dark { background-color: #1e3a5f; }
+        .bg-brand-accent { background-color: #0066cc; }
+        .bg-brand-warm { background-color: #f59e0b; }
+        .text-brand-dark { color: #1e3a5f; }
+        .text-brand-accent { color: #0066cc; }
+        .text-brand-warm { color: #f59e0b; }
+        .border-brand-accent { border-color: #0066cc; }
+        .border-brand-warm { border-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col">
+        <div class="bg-brand-dark px-16 py-6">
+            <p class="text-xs uppercase tracking-widest text-blue-300 mb-1 font-accent">Research Categories</p>
+            <h1 class="text-3xl font-bold text-white">研究タイプ別分類</h1>
+        </div>
+        <div class="flex-1 px-16 py-12">
+            <div class="grid grid-cols-2 gap-8 h-full">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-lg shadow-lg">
+                    <i class="fas fa-flask text-brand-accent text-4xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">基礎研究</h2>
+                    <p class="text-base text-gray-700 mb-3">期間：3～5年</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">新しい科学的知見の創出、理論・実験手法の開発、長期的な学術的価値の追求</p>
+                </div>
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-lg shadow-lg">
+                    <i class="fas fa-cogs text-brand-accent text-4xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">応用研究</h2>
+                    <p class="text-base text-gray-700 mb-3">期間：2～3年</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">基礎研究成果の実用化、技術移転、産業応用を目指した開発研究</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-lg shadow-lg">
+                    <i class="fas fa-building text-brand-accent text-4xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">施設・設備整備</h2>
+                    <p class="text-base text-gray-700 mb-3">期間：1～2年</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">大型研究施設、共用設備、計測装置などのインフラ整備支援</p>
+                </div>
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-8 rounded-lg shadow-lg">
+                    <i class="fas fa-user-graduate text-brand-warm text-4xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-4">人材育成</h2>
+                    <p class="text-base text-gray-700 mb-3">期間：1～3年</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">若手研究者育成、大学院生支援、キャリア開発プログラム</p>
+                </div>
+            </div>
+        </div>
+        <div class="px-16 py-4 border-t border-gray-200 flex justify-between items-center">
+            <p class="text-xs text-gray-500">FY 2026 Office of Science Financial Assistance Program</p>
+            <p class="text-xs text-gray-400 font-accent">08</p>
+        </div>
+    </div>
+</body>
+</html>
