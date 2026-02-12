@@ -1,0 +1,128 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #213a8f, #1a1a2f);
+  color: #f8f8ff;
+}
+
+.container {
+  width: min(1100px, 96vw);
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.1rem;
+}
+
+h1,
+h2 {
+  margin: 0.5rem 0;
+}
+
+.description {
+  opacity: 0.92;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 0.8rem;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+input[type="number"] {
+  width: 86px;
+  border-radius: 6px;
+  border: 1px solid #b9c3ec;
+  padding: 0.3rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #ffd34f;
+  color: #2d2100;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.6rem;
+}
+
+.card {
+  background: #f8f8ff;
+  color: #191a1f;
+  border-radius: 8px;
+  border: 1px solid #d9d9ef;
+  padding: 0.55rem;
+  font-size: 0.92rem;
+}
+
+.card.selected {
+  outline: 3px solid #38c2ff;
+}
+
+.card.attack {
+  border-left: 6px solid #c9404d;
+}
+
+.card.defense {
+  border-left: 6px solid #42a35a;
+}
+
+.dept-ops {
+  background: #e8f0ff;
+}
+
+.dept-maint {
+  background: #edfbe7;
+}
+
+.dept-safety {
+  background: #fff4de;
+}
+
+.dept-emergency {
+  background: #ffe9ec;
+}
+
+.card small {
+  display: block;
+  opacity: 0.84;
+}
+
+.log {
+  margin: 0;
+  background: #0f1220;
+  border: 1px solid #313a5c;
+  border-radius: 8px;
+  padding: 0.8rem;
+  min-height: 180px;
+  white-space: pre-wrap;
+}
