@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>シンプルポーカー</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>🃏 シンプルポーカー</h1>
+      <p class="description">「ゲーム開始」であなたとディーラーに5枚ずつ配られ、役の強さで勝敗が決まります。</p>
+
+      <section>
+        <h2>あなたの手札</h2>
+        <div id="player-cards" class="cards"></div>
+        <p id="player-hand" class="hand-text">-</p>
+      </section>
+
+      <section>
+        <h2>ディーラーの手札</h2>
+        <div id="dealer-cards" class="cards"></div>
+        <p id="dealer-hand" class="hand-text">-</p>
+      </section>
+
+      <button id="deal-button">ゲーム開始</button>
+      <p id="result" class="result">ボタンを押して開始してください。</p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
