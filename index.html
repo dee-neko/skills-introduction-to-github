@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>講師依頼文章作成ツール</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>講師依頼文章作成ツール</h1>
+        <p>研修講師への依頼文書を自動生成します</p>
+    </header>
+
+    <main class="container">
+        <section class="form-panel">
+            <form id="request-form">
+                <fieldset id="csv-section">
+                    <legend>CSV一括読み込み</legend>
+                    <p class="fieldset-note">CSVファイルで複数の講師情報を一括読み込みできます。列: 研修名, 講師名, 所属, 課目名, 日時（＋任意: 敬称, 研修場所, 謝金旅費）</p>
+                    <div class="csv-upload-row">
+                        <input type="file" id="csv-file" accept=".csv">
+                        <button type="button" id="csv-clear-btn" disabled>CSVクリア</button>
+                    </div>
+                    <div id="csv-status"></div>
+                    <div class="csv-table-wrapper">
+                        <table id="csv-preview-table">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>基本情報</legend>
+                    <div class="form-group">
+                        <label for="doc-number">文書番号</label>
+                        <input type="text" id="doc-number" placeholder="例: 研第〇〇号">
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-date">発信日付</label>
+                        <input type="date" id="issue-date">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>講師情報</legend>
+                    <div class="form-group">
+                        <label for="instructor-name">講師名 <span class="required">*</span></label>
+                        <input type="text" id="instructor-name" required placeholder="例: 山田 太郎">
+                    </div>
+                    <div class="form-group">
+                        <label for="instructor-affiliation">講師の所属 <span class="required">*</span></label>
+                        <input type="text" id="instructor-affiliation" required placeholder="例: ○○大学 △△学部">
+                    </div>
+                    <div class="form-group">
+                        <label for="honorific">敬称</label>
+                        <select id="honorific">
+                            <option value="様" selected>様</option>
+                            <option value="殿">殿</option>
+                            <option value="先生">先生</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>研修情報</legend>
+                    <div class="form-group">
+                        <label for="training-name">研修名 <span class="required">*</span></label>
+                        <input type="text" id="training-name" required placeholder="例: 令和８年度 新任職員研修">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-name">課目名 <span class="required">*</span></label>
+                        <input type="text" id="subject-name" required placeholder="例: リーダーシップ論">
+                    </div>
+                    <div class="form-group">
+                        <label for="date-time">日時 <span class="required">*</span></label>
+                        <input type="text" id="date-time" required placeholder="例: 令和８年４月15日（水）10:00〜12:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="venue">研修場所</label>
+                        <input type="text" id="venue" placeholder="例: ○○研修センター 大研修室">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>差出人情報</legend>
+                    <div class="form-group">
+                        <label for="sender-org">組織名</label>
+                        <input type="text" id="sender-org" placeholder="例: ○○県人事委員会">
+                    </div>
+                    <div class="form-group">
+                        <label for="sender-position">役職</label>
+                        <input type="text" id="sender-position" placeholder="例: 研修部長">
+                    </div>
+                    <div class="form-group">
+                        <label for="sender-name">氏名</label>
+                        <input type="text" id="sender-name" placeholder="例: 佐藤 花子">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>定型文編集</legend>
+                    <p class="fieldset-note">定型文を編集できます。{講師名} {組織名} {敬称} は自動で置換されます。</p>
+                    <div class="form-group">
+                        <label for="template-subject">件名</label>
+                        <input type="text" id="template-subject" value="研修講師の派遣依頼について（依頼）">
+                    </div>
+                    <div class="form-group">
+                        <label for="template-greeting">前文（時候の挨拶）</label>
+                        <textarea id="template-greeting" rows="3">拝啓　時下ますますご清栄のこととお慶び申し上げます。平素より{組織名}の事業にご理解とご協力を賜り、厚く御礼申し上げます。</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="template-body">本文（依頼文）</label>
+                        <textarea id="template-body" rows="4">さて、下記のとおり研修を実施するにあたり、{講師名}{敬称}に講師をお願いしたく、ご多忙の折誠に恐縮ではございますが、何卒ご協力賜りますようお願い申し上げます。</textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>その他</legend>
+                    <div class="form-group">
+                        <label for="honorarium">謝金・旅費</label>
+                        <textarea id="honorarium" rows="2" placeholder="例: 別途、当方規定によりお支払いいたします。"></textarea>
+                    </div>
+                </fieldset>
+            </form>
+        </section>
+
+        <section class="preview-panel">
+            <div class="preview-actions">
+                <button id="copy-btn" type="button">クリップボードにコピー</button>
+                <button id="copy-all-btn" type="button" style="display:none;">全件コピー</button>
+                <button id="print-btn" type="button">印刷</button>
+            </div>
+            <div id="doc-nav" class="doc-nav" style="display:none;">
+                <button type="button" id="nav-prev" disabled>&lt; 前へ</button>
+                <span id="nav-info">1 / 1</span>
+                <button type="button" id="nav-next" disabled>次へ &gt;</button>
+            </div>
+            <div id="document-preview" class="document-sheet">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>講師依頼文章作成ツール</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
