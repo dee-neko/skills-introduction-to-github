@@ -301,6 +301,152 @@ legend {
     font-style: italic;
 }
 
+.page-break {
+    border: none;
+    border-top: 2px dashed #ccc;
+    margin: 2em 0;
+}
+
+.doc-page {
+    margin-bottom: 1em;
+}
+
+/* ===== CSV Section ===== */
+
+.csv-upload-row {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.csv-upload-row input[type="file"] {
+    flex: 1;
+    font-size: 0.85rem;
+    font-family: var(--font-form);
+}
+
+#csv-clear-btn {
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: #fff;
+    font-size: 0.85rem;
+    font-family: var(--font-form);
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background-color 0.2s;
+}
+
+#csv-clear-btn:hover:not(:disabled) {
+    background-color: #fee;
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+#csv-clear-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#csv-status {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+#csv-status.success {
+    color: #27ae60;
+    font-weight: 500;
+}
+
+#csv-status.error {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+.csv-table-wrapper {
+    max-height: 200px;
+    overflow: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: none;
+}
+
+.csv-table-wrapper.visible {
+    display: block;
+}
+
+#csv-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+#csv-preview-table th,
+#csv-preview-table td {
+    padding: 0.3rem 0.6rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    white-space: nowrap;
+}
+
+#csv-preview-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+#csv-preview-table tbody tr:hover {
+    background: #f0f7ff;
+}
+
+#csv-preview-table tbody tr.active {
+    background: #dbeafe;
+}
+
+/* ===== Document Navigation ===== */
+
+.doc-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: var(--paper-color);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.doc-nav button {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: #fff;
+    font-size: 0.85rem;
+    font-family: var(--font-form);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.doc-nav button:hover:not(:disabled) {
+    background-color: #e8f4fd;
+    border-color: var(--accent-color);
+}
+
+.doc-nav button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#nav-info {
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-width: 6em;
+    text-align: center;
+}
+
 /* ===== Footer ===== */
 
 footer {
@@ -345,7 +491,8 @@ footer {
     header,
     footer,
     .form-panel,
-    .preview-actions {
+    .preview-actions,
+    .doc-nav {
         display: none !important;
     }
 
@@ -366,6 +513,18 @@ footer {
         margin: 0;
         min-height: auto;
         max-width: 100%;
+    }
+
+    .document-sheet .page-break {
+        display: none;
+    }
+
+    .document-sheet .doc-page {
+        page-break-after: always;
+    }
+
+    .document-sheet .doc-page:last-child {
+        page-break-after: auto;
     }
 
     @page {

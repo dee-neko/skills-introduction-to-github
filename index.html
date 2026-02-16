@@ -15,6 +15,22 @@
     <main class="container">
         <section class="form-panel">
             <form id="request-form">
+                <fieldset id="csv-section">
+                    <legend>CSV一括読み込み</legend>
+                    <p class="fieldset-note">CSVファイルで複数の講師情報を一括読み込みできます。列: 研修名, 講師名, 所属, 課目名, 日時（＋任意: 敬称, 研修場所, 謝金旅費）</p>
+                    <div class="csv-upload-row">
+                        <input type="file" id="csv-file" accept=".csv">
+                        <button type="button" id="csv-clear-btn" disabled>CSVクリア</button>
+                    </div>
+                    <div id="csv-status"></div>
+                    <div class="csv-table-wrapper">
+                        <table id="csv-preview-table">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
                 <fieldset>
                     <legend>基本情報</legend>
                     <div class="form-group">
@@ -113,7 +129,13 @@
         <section class="preview-panel">
             <div class="preview-actions">
                 <button id="copy-btn" type="button">クリップボードにコピー</button>
+                <button id="copy-all-btn" type="button" style="display:none;">全件コピー</button>
                 <button id="print-btn" type="button">印刷</button>
+            </div>
+            <div id="doc-nav" class="doc-nav" style="display:none;">
+                <button type="button" id="nav-prev" disabled>&lt; 前へ</button>
+                <span id="nav-info">1 / 1</span>
+                <button type="button" id="nav-next" disabled>次へ &gt;</button>
             </div>
             <div id="document-preview" class="document-sheet">
             </div>
