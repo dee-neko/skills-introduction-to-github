@@ -1,0 +1,375 @@
+:root {
+    --primary-color: #2c3e50;
+    --primary-light: #34495e;
+    --accent-color: #2980b9;
+    --accent-hover: #2471a3;
+    --bg-color: #f0f2f5;
+    --paper-color: #ffffff;
+    --border-color: #d1d5db;
+    --text-color: #1f2937;
+    --text-muted: #6b7280;
+    --font-form: -apple-system, 'Hiragino Sans', 'Meiryo', sans-serif;
+    --font-document: 'Yu Mincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-form);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 1.2rem 2rem;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+header p {
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 1.5rem auto;
+    padding: 0 1.5rem;
+    align-items: start;
+}
+
+/* ===== Form Panel ===== */
+
+.form-panel {
+    background: var(--paper-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin: 0 0 1rem;
+}
+
+legend {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-color);
+    padding: 0 0.5rem;
+}
+
+.fieldset-note {
+    margin: 0 0 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.form-group {
+    margin-bottom: 0.8rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: var(--text-color);
+}
+
+.required {
+    color: #e74c3c;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: var(--font-form);
+    color: var(--text-color);
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.15);
+}
+
+.form-group textarea {
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+/* ===== Preview Panel ===== */
+
+.preview-panel {
+    position: sticky;
+    top: 1.5rem;
+}
+
+.preview-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.preview-actions button {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: var(--font-form);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.preview-actions button:active {
+    transform: scale(0.98);
+}
+
+#copy-btn {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+#copy-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+#copy-btn.copied {
+    background-color: #27ae60;
+}
+
+#print-btn {
+    background-color: var(--primary-light);
+    color: #fff;
+}
+
+#print-btn:hover {
+    background-color: var(--primary-color);
+}
+
+/* ===== Document Sheet (A4 simulation) ===== */
+
+.document-sheet {
+    background: var(--paper-color);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    padding: 15mm 20mm;
+    min-height: 297mm;
+    max-width: 210mm;
+    margin: 0 auto;
+    font-family: var(--font-document);
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+.doc-date {
+    text-align: right;
+    margin: 0 0 0.2em;
+}
+
+.doc-number {
+    text-align: right;
+    margin: 0 0 1.5em;
+}
+
+.doc-recipient {
+    text-align: left;
+    margin: 0 0 1.5em;
+}
+
+.doc-recipient p {
+    margin: 0;
+}
+
+.doc-recipient .recipient-name {
+    font-size: 1.1em;
+}
+
+.doc-sender {
+    text-align: right;
+    margin: 0 0 2em;
+}
+
+.doc-sender p {
+    margin: 0;
+}
+
+.doc-subject {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.05em;
+    margin: 1.5em 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.3em;
+}
+
+.doc-body {
+    margin: 1.5em 0;
+}
+
+.doc-body p {
+    margin: 0 0 0.8em;
+    text-indent: 1em;
+}
+
+.doc-closing {
+    text-align: right;
+    margin: 1.5em 0;
+}
+
+.doc-details-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.05em;
+    margin: 1.5em 0 1em;
+}
+
+.doc-details {
+    margin: 0 0 1.5em 1.5em;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 0.5em;
+}
+
+.detail-num {
+    min-width: 2em;
+    flex-shrink: 0;
+}
+
+.detail-label {
+    min-width: 5em;
+    flex-shrink: 0;
+}
+
+.detail-value {
+    flex: 1;
+}
+
+.doc-end {
+    text-align: right;
+    margin-top: 2em;
+}
+
+.doc-placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+/* ===== Footer ===== */
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 2rem;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    .preview-panel {
+        position: static;
+    }
+
+    .document-sheet {
+        max-width: 100%;
+        padding: 8mm 10mm;
+        min-height: auto;
+        font-size: 13px;
+    }
+
+    header h1 {
+        font-size: 1.2rem;
+    }
+}
+
+/* ===== Print ===== */
+
+@media print {
+    body {
+        background: none;
+    }
+
+    header,
+    footer,
+    .form-panel,
+    .preview-actions {
+        display: none !important;
+    }
+
+    .container {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .preview-panel {
+        position: static;
+    }
+
+    .document-sheet {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+        min-height: auto;
+        max-width: 100%;
+    }
+
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
+}
